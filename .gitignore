@@ -1,0 +1,7 @@
+.python-version
+.env
+.cache
+
+data/*
+__pycache__/*
+workpad/*
