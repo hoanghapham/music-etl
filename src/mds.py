@@ -62,6 +62,7 @@ class SongsExtractor(BaseExtractor):
                 release = f.root.metadata.songs.cols.release[row].decode('utf-8')
                 genre = f.root.metadata.songs.cols.genre[row].decode('utf-8')
                 artist_id = f.root.metadata.songs.cols.artist_id[row].decode('utf-8')
+                artist_name = f.root.metadata.songs.cols.artist_name[row].decode('utf-8')
                 year = int(f.root.musicbrainz.songs.cols.year[row])
 
                 data = {
@@ -70,6 +71,7 @@ class SongsExtractor(BaseExtractor):
                     'release': release,
                     'genre': genre,
                     'artist_id': artist_id,
+                    'artist_name': artist_name,
                     'year': year
                 }
 
