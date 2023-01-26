@@ -1,9 +1,10 @@
-import tables
-import json
-import glob
-from src.utils.custom_logger import init_logger
 from abc import ABC, abstractmethod
 from logging import Logger
+import json
+import glob
+import tables
+
+from src.utils.custom_logger import init_logger
 
 
 class BaseExtractor(ABC):
@@ -47,7 +48,7 @@ class BaseExtractor(ABC):
                 json.dump(data, f)
 
 
-class SongsExtractor(BaseExtractor):
+class SongExtractor(BaseExtractor):
     def __init__(self, logger: Logger = None) -> None:
         super().__init__(logger)
 
@@ -77,7 +78,7 @@ class SongsExtractor(BaseExtractor):
 
         return data
 
-class ArtistsExtractor(BaseExtractor):
+class ArtistExtractor(BaseExtractor):
     def __init__(self, logger: Logger = None) -> None:
         super().__init__(logger)
 
