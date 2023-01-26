@@ -16,7 +16,6 @@ class BaseExtractor(ABC):
         else:
             self.logger = logger
 
-
     @abstractmethod
     def extract_one(self, input_path: str) -> dict:
         pass
@@ -49,8 +48,8 @@ class BaseExtractor(ABC):
 
 
 class SongsExtractor(BaseExtractor):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, logger: Logger = None) -> None:
+        super().__init__(logger)
 
     def extract_one(self, file_path):
 
@@ -75,4 +74,26 @@ class SongsExtractor(BaseExtractor):
                 }
 
         return data
-                
+
+class ArtistsExtractor(BaseExtractor):
+    def __init__(self, logger: Logger = None) -> None:
+        super().__init__(logger)
+
+    def extract_one(self, input_path: str) -> dict:
+        with tables.open_file(input_path, 'r') as f:
+            nrows = f.root.metadata.songs.nrows
+
+            for row in range(nrows):
+                artist_id = f.root.metadata.songs.cols.artist_id[row].decode('utf-8')
+                artist_name = f.root.metadata.songs.cols.artist_name[row].decode('utf-8')
+                artist_location = f.root.metadata.songs.cols.artist_location[row].decode('utf-8')
+                artist_terms = [i.decode('utf-8') for i in list(f.root.metadata.artist_terms)]
+
+                data = {
+                    'id': artist_id,
+                    'name': artist_name,
+                    'location': artist_location,
+                    'tags': artist_terms
+                }
+        
+        return data
