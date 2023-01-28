@@ -3,9 +3,10 @@ from logging import Logger
 import json
 import glob
 import tables
+from pydantic import parse_obj_as
 
 from src.utils.custom_logger import init_logger
-
+from src.custom_types import MdsSong, MdsArtist
 
 class BaseExtractor(ABC):
     
@@ -21,18 +22,16 @@ class BaseExtractor(ABC):
     def extract_one(self, input_path: str) -> dict:
         pass
     
-    def extract_many(self, input_path: str):
+    def extract_many(self, input_path: str) -> list[MdsSong] | list[MdsArtist]:
         self.input_path = input_path
         self.file_paths = glob.glob(self.input_path)
         self.num_files = len(self.file_paths)
         self.logger.info(f"Found {self.num_files} files")
 
         data = []
-        
         logging_points = [round(i/100 * self.num_files) for i in range(20, 120, 20)]
 
         for i, path in enumerate(self.file_paths, start=1):
-
             data.append(self.extract_one(path))
 
             if i in logging_points:
@@ -52,7 +51,7 @@ class SongExtractor(BaseExtractor):
     def __init__(self, logger: Logger = None) -> None:
         super().__init__(logger)
 
-    def extract_one(self, file_path):
+    def extract_one(self, file_path) -> MdsSong:
 
         with tables.open_file(file_path, 'r') as f:
             nrows = f.root.metadata.songs.nrows
@@ -76,13 +75,13 @@ class SongExtractor(BaseExtractor):
                     'year': year
                 }
 
-        return data
+        return parse_obj_as(MdsSong, data)
 
 class ArtistExtractor(BaseExtractor):
     def __init__(self, logger: Logger = None) -> None:
         super().__init__(logger)
 
-    def extract_one(self, input_path: str) -> dict:
+    def extract_one(self, input_path: str) -> MdsArtist:
         with tables.open_file(input_path, 'r') as f:
             nrows = f.root.metadata.songs.nrows
 
@@ -99,4 +98,4 @@ class ArtistExtractor(BaseExtractor):
                     'tags': artist_terms
                 }
         
-        return data
+        return parse_obj_as(MdsArtist, data)
