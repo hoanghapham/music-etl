@@ -1,0 +1,21 @@
+table_name: songs
+schema_name: spotify
+columns:
+  - column_name: id
+    data_type: VARCHAR(256)
+  - column_name: name
+    data_type: VARCHAR(256)
+  - column_name: url
+    data_type: VARCHAR(MAX)
+  - column_name: external_ids
+    data_type: SUPER
+  - column_name: popularity
+    data_type: NUMERIC
+  - column_name: available_markets
+    data_type: SUPER
+  - column_name: album
+    data_type: VARCHAR(256)
+  - column_name: artists
+    data_type: SUPER
+  - column_name: duration_ms
+    data_type: INTEGER

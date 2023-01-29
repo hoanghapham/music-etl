@@ -1,0 +1,18 @@
+table_name: songs
+schema_name: mds
+columns:
+  - column_name: id
+    data_type: VARCHAR(256)
+  - column_name: title
+    data_type: VARCHAR(256) 
+  - column_name: release
+    data_type: VARCHAR(256)
+  - column_name: genre
+    data_type: VARCHAR(256)
+  - column_name: artist_id
+    data_type: VARCHAR(256)
+  - column_name: artist_name
+    data_type: VARCHAR(256)
+  - column_name: year
+    data_type: INTEGER
+    
