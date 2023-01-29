@@ -1,0 +1,142 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.28.2
+    method: GET
+    uri: https://api.spotify.com/v1/search?q=artist%3AThe+Box+Tops&type=artist&limit=10
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAALRWa0/bMBT9zq+IIo0vdMRO4jwqoYkhxrRuYiCGpk3T5MTXTSAvHIe2Qvz3OY+W
+        tKMtIPjo65t7ju+5PvHdjqbpVMi4lKWuDbU7tVaRSACvl3okZVEODYMW8X5Z5DLms/0wT41bbJRA
+        RRh9uKlAzA7aEu+sw4sI9j7m072LvCh35ayAbms357wEeYB2kziN5QFG+qDFiiWkDfbvDl3FYCpB
+        ZDT5W4mkx6vZ62gs0csLyJb4taCGNTo5u81O85sfn2NrNB2dffslfwq9K3Y/mOPxPEnyCYhVrHkf
+        sipJBg9hmUua1HFsYw/5/5UbQyagO5MeVEGQwLhKtSIv9EEDdq2JPLyuF6kChVkAVNaropyFETBI
+        4rDN0P4sij5Fk07Jdede1IpZU2lrWkrHsKJNzQTicSSb8yOEen1Rai0xVPxClilyRlPJcImDbc8x
+        Cfc4sACDiy3fsUPKsUuAMd9hBNnM03s1JzGT0Rxr0enH6Tj2c9j4jBHAGHngEwu4C6aPbAthj1Pk
+        KUUCH4DZzuNsFNQWMuazWuPgkCLTc2zMFHpoW4Fr254fhCb3TJebmHIfKVKPkjGf0JnnyBQ63Hco
+        EMzBpTahISMmCpFJgsCn4FjcCahJ8ZrGzKn0ZjejKTSQyh40ZQ9abQ8Pc6YuRpVQEcvmVhOy2KgN
+        pPmuHeyHLyoRN/Fu/oft/nDTfe+15tX8hdjspDw9/T66OqfV8ST4cmUfyavX8xe00Vpe5g1rOK96
+        w9a0njesEfoIBNBkq97oxXJvav9byG3eHJ9Nqk+Xh1ExYeT863R05F0Wryc3eQO513BelXtr2ma5
+        R1TQ/Bq099pTbvjLFd+kwMJw9OaJ0f4zukimRmC583r7IOnR0QsBt3FelSuJC3kstb7fuf8HAAD/
+        /wMAFvqrFDQJAAA=
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - HTTP/2 edgeproxy, 1.1 google
+      access-control-allow-credentials:
+      - 'true'
+      access-control-allow-headers:
+      - Accept, App-Platform, Authorization, Content-Type, Origin, Retry-After, Spotify-App-Version,
+        X-Cloud-Trace-Context, client-token, content-access-token
+      access-control-allow-methods:
+      - GET, POST, OPTIONS, PUT, DELETE, PATCH
+      access-control-allow-origin:
+      - '*'
+      access-control-max-age:
+      - '604800'
+      cache-control:
+      - public, max-age=7200
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Sun, 29 Jan 2023 08:02:26 GMT
+      server:
+      - envoy
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-robots-tag:
+      - noindex, nofollow
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.28.2
+    method: GET
+    uri: https://api.spotify.com/v1/search?q=artist%3ASonora+Santanera&type=artist&limit=10
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAMxY227bOBB971cIApqXBjVpXSgFCBaJmzRp3TRt0qTNYrGgRMpmQYsqRTu2i/xI
+        f2d/bGlZcRwnlizBQvtmDUczx3PmDEn9fGEYJpaKpSo1jT3jp37Wlr6k0ezR7CuVpHutFk7Y6zQR
+        ikWT16EYtEawlVIsw/5fP4ZUTvbnIV5aBxciFhK/usCxwjGVeEdNEpov74goSqnaBzucDZjah8Dc
+        nedjig6y/H/nCLSNjhWVMeb/DiVfwpat5VAeQRQJjR9hnCdtWZ30fHz87u3kDPs0QX7n+PoMITMP
+        drd7ny8SnItbKldz3dciHnK++2BWQmE+s0MAfMdznsTr0VjS/E+ZgeBUCnP3/pcxoGMW4jgzKSkS
+        /aCj/bN4exMGct7W/cNFLEaySKVuA9yjKyzMkFDW66uZ2bXBUgE0LY8AanghiTW2VhaohQMXudDV
+        5QGAOjRAkR/CyAII+BaFCKPAopSEgbkU85YR1c9TLQr6PBirXReMA5FdCYxOVQIGunXBRBB5lcDo
+        VPdgltolxgOa5exiYy5BYyHBB4YTkQw5lkxlynGdxcJMpNnr85Z6eGMoWWbPO29vvr5XpKmlGm1N
+        w+3jD6zjTdObz/1vV+RE2t3bH28Ot6dhC0G7UMD1hLkG9qowS90aESaZtV/QRpbroAB7nh26ug3d
+        0KZtF0QE1BYmqAsGUtCuBEanKgHj2jWx2J4DKxamoiwNQo0OllykRkdwvUTEOqW2YW2lFimnCaVC
+        9eZEnfrRUed7+J50r+Kjg0CQ7SnVbkKna0Cv6rTUbUmnz/TAIeacqo3HM6xPehEJTZAOwPT6S/f6
+        ixN9wJ44m36zvuJRskXSod8A62tQr7Je6tbsdNZHAoeEIPB8EhA3Io7v2fpAFf6W6VwJTMPTuWJh
+        Sqbz2ZCOMlH2JN1Yon5thRYpppGxLKbk4/noRKrLXkcwji/fu9OL7SnUhU2M5edBPxnLZW7FY1mT
+        /9+vWN+/jNN4VuyQCV3wjXsA1J/SBZw0coi+VG8vzq8UOj06FDfjy7alJkfdLV6EnSaaYA3qJ2fo
+        MrfiJtBsM2x0demmRihig29+jarfAEWENNEA9vj4+tOhF309YPQG3fZQ14+vpn/4EFgDepX/Urdm
+        d2nHt6CvNyN9kw+syPUDz4ucEFi/ZZeuBKbhXbpiYYp26Q0uUMbEOOD0O46JXv4sAq4p37psi2S0
+        AG5mnzjn3wdzS6x1/Fg+5vyD6BIcM5F0xMQwXXFcaAzp57sXd/8DAAD//wMAbKSwjLgVAAA=
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - HTTP/2 edgeproxy, 1.1 google
+      access-control-allow-credentials:
+      - 'true'
+      access-control-allow-headers:
+      - Accept, App-Platform, Authorization, Content-Type, Origin, Retry-After, Spotify-App-Version,
+        X-Cloud-Trace-Context, client-token, content-access-token
+      access-control-allow-methods:
+      - GET, POST, OPTIONS, PUT, DELETE, PATCH
+      access-control-allow-origin:
+      - '*'
+      access-control-max-age:
+      - '604800'
+      cache-control:
+      - public, max-age=7200
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Sun, 29 Jan 2023 08:02:26 GMT
+      server:
+      - envoy
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-robots-tag:
+      - noindex, nofollow
+    status:
+      code: 200
+      message: OK
+version: 1

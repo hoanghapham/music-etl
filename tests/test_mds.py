@@ -1,4 +1,3 @@
-#%%
 from pytest import fixture
 from src.mds import SongExtractor, ArtistExtractor
 import json

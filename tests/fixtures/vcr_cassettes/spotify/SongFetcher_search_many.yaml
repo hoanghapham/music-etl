@@ -1,0 +1,159 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.28.2
+    method: GET
+    uri: https://api.spotify.com/v1/search?q=track%3ASetting+Fire+to+Sleeping+Giants+artist%3AThe+Dillinger+Escape+Plan&type=track&limit=10
+  response:
+    body:
+      string: !!binary |
+        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
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - HTTP/2 edgeproxy, 1.1 google
+      access-control-allow-credentials:
+      - 'true'
+      access-control-allow-headers:
+      - Accept, App-Platform, Authorization, Content-Type, Origin, Retry-After, Spotify-App-Version,
+        X-Cloud-Trace-Context, client-token, content-access-token
+      access-control-allow-methods:
+      - GET, POST, OPTIONS, PUT, DELETE, PATCH
+      access-control-allow-origin:
+      - '*'
+      access-control-max-age:
+      - '604800'
+      cache-control:
+      - public, max-age=7200
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Sun, 29 Jan 2023 07:02:55 GMT
+      server:
+      - envoy
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-robots-tag:
+      - noindex, nofollow
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.28.2
+    method: GET
+    uri: https://api.spotify.com/v1/search?q=track%3AIn+A+Subtle+Way+artist%3AJacob+Young&type=track&limit=10
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAOyYXW/aWBCG7/srENLmJtlixxiHSFEVCCEEm7qxE9qsVuhgH4K35mNtk5ZW+e9r
+        HlMwyZLQarVX4WIkfGaeec/YPjPy9zeFQjGJhPc5LhaOC9/Tv+mFYSQHi7/FYZJM4+NSSUyDt/F0
+        kgSD+VtvMirdq6VYisgbvvt7JqP5CYTftNPWeP9035n1k1Dud8V8X0RJECfpwqXwJv39T5PZ+G4v
+        mU9lFrE3GQximZwoe2EwCpITVSkeZAqCRI5Q9MdSU3pNhP3ZaK1yfa23IKI3cznIrSPgEYkV+TWR
+        0ViEvVkUxptU1pfb3SjDZCrHG3XI8CXd8OLY+eKrotutBDfS+XY5rxwVc8CHg3zuXeq7VL6NvcEL
+        fGi7uI7FKCsVd6TAHdn0WBcTBZuLsyhgbSn2OPM5fqkAD4U/8zflXgSh6IeyNxLRZ/nj9hRPz4oH
+        qW1gm1gTa2HfY6+wLvYae7uwtVNsDQunBqd2joVWu8C2sJfYDhZyDXLNwcKvdbGfsGSpk6UOvw6z
+        DrMOs47aOmrrMOsw6zdYaHVodWhnKDxDyVkbS+wZsWf4NOpYPBtkbKCwgcJz8p5DOCf2nIxNdDap
+        RhO1TQhN1DbxbLL35gdsFgWzic4mOi9QdYHnBT4X+FxQ+RbkFuQWe2/h2YLZQmcL/0syXrKvS3th
+        20S12VEbVW320sazDadNxjZ62lTDZF8m+zKpjEmUiU4Tf5O8JnlNdJrU32RHFgSLWAv9FkoslFgo
+        saBZ7MhCiYVyC74F2YJsQbZQaH3EZllQ2yFXB34Hfge1HcgdmB2q0YHcIeo9FbCJtYm1ibXRZqPN
+        hmCzUxs9Nhpssn8g9gr+FT5XrDpcd6ieQwUc+A58B20OfAe+gxKHCjgodMjlsGsHtS41dCG4KHR5
+        Gl0ILrEuSlwILgQXgosqF8412q7hXKP5mr1cs3qD2hvU3sC8of5dPD+i+RbCLZpvu8WNE+fZw37H
+        o37RWkqHIhRR9/5bUGk0hsL8dGc3G+5fuYMul3SnU35Bjbdhc7DlEb+D40jcyX9reEMZ3A2TxUKl
+        rDw61MMNnalKzx+nEkvASqJfMSpqxVfSX//Q0DxPK2uqVi4LzTCU8lFF8TzDL+ubreJL4CfDZbpc
+        fbaJ0pRfF6VK5fAnRaXpdhBVKf+ypvKRrv50obY0zFXTtgPpybgwGRTcIL2Uc4lkKEUse75IMle1
+        WjW2OfSmkfSCOJiMcZ2no1zeNZkk6auyngqr+bWto9aT0WDhcPz8C7N6XbYNav/Jm7vbkPbTr+6u
+        A9rO49lLw9kzo9mvDWa5p+x1KHsdyl6Hsteh7P8ayop+EHu98WzUl9HipFHXC7NIJGlr6mUfAMp6
+        1TC01ar8Og0DL6A7D0QYy9zKslME/qNGUQziyON07Lw3G6dVQzMUXXnag57pNbt1GlpmSdH10azh
+        uNIZNmz3ylNNR9evnqbbpclkTXgbcoVadpgX3eJeOPFE+LR4q87TGhdEIfuCU+iK+Tp2OpnO0lYe
+        JNRAWV+P5H0gv/Qez0bT1Ww0mmq/L71Kg4E38FVV9z1dVny9InRNKwvlSBkIIx2bRKWiasqRr7/z
+        Av9EaqoYKOn81O+Lsnok+1XjsKpU+15Z9H3fG6zFUabc06SvV360TFzWEY/7JcvHz926VbMs8rGK
+        h3ZZhuI4fXQWF8azMFxeyj5t5WqVVWoyix85Mm1BS/8/vHn4BwAA//8DAPA213+TEwAA
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - HTTP/2 edgeproxy, 1.1 google
+      access-control-allow-credentials:
+      - 'true'
+      access-control-allow-headers:
+      - Accept, App-Platform, Authorization, Content-Type, Origin, Retry-After, Spotify-App-Version,
+        X-Cloud-Trace-Context, client-token, content-access-token
+      access-control-allow-methods:
+      - GET, POST, OPTIONS, PUT, DELETE, PATCH
+      access-control-allow-origin:
+      - '*'
+      access-control-max-age:
+      - '604800'
+      cache-control:
+      - public, max-age=7200
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Sun, 29 Jan 2023 07:02:55 GMT
+      server:
+      - envoy
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-robots-tag:
+      - noindex, nofollow
+    status:
+      code: 200
+      message: OK
+version: 1
