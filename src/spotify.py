@@ -107,7 +107,7 @@ class BaseFetcher(ABC):
             response.raise_for_status()
         except HTTPError as e:
             self.logger.error(e)
-            raise e
+            return None
         else:
             return response.json()
 
@@ -123,7 +123,6 @@ class BaseFetcher(ABC):
             json_data = [i.dict() for i in data]
             with open(output_path, 'w') as f:
                 json.dump(json_data, f)
-
 
     @abstractmethod
     def search_one(self):
@@ -158,11 +157,14 @@ class SongFetcher(BaseFetcher):
         }
 
         result = self._fetch_data(self.search_url, params)
-        matched_results = {
-            'mds_song_id': mds_song.id,
-            'spotify_song_ids': [i['id'] for i in result['tracks']['items']]
-        }
-        return SongSearchResult.parse_obj(matched_results)
+        if result is not None:
+            matched_results = {
+                'mds_song_id': mds_song.id,
+                'spotify_song_ids': [i['id'] for i in result['tracks']['items']]
+            }
+            return SongSearchResult.parse_obj(matched_results)
+        else:
+            return None
     
     def search_many(self, mds_songs: list[MdsSong]) -> list[SongSearchResult]:
 
@@ -243,11 +245,15 @@ class ArtistFetcher(BaseFetcher):
         }
 
         result = self._fetch_data(self.search_url, params)
-        matched_results = {
-            'mds_artist_id': mds_artist.id,
-            'spotify_artist_ids': [i['id'] for i in result['artists']['items']]
-        }
-        return ArtistSearchResult.parse_obj(matched_results)
+        
+        if result is not None:
+            matched_results = {
+                'mds_artist_id': mds_artist.id,
+                'spotify_artist_ids': [i['id'] for i in result['artists']['items']]
+            }
+            return ArtistSearchResult.parse_obj(matched_results)
+        else:
+            return None
 
     def search_many(self, mds_artist_list):
         results = []

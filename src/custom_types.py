@@ -1,20 +1,21 @@
 from pydantic import BaseModel
+from typing import Optional
 
 # MDS types
 class MdsSong(BaseModel):
     id: str
     title: str
-    release: str
-    genre: str
+    release: Optional[str]
+    genre: Optional[str]
     artist_id: str
     artist_name: str
-    year: int
+    year: Optional[int]
 
 class MdsArtist(BaseModel):
     id: str
     name: str
-    location: str
-    tags: list[str]
+    location: Optional[str]
+    tags: Optional[list[str]]
 
 # Spotify types
 
@@ -29,7 +30,7 @@ class SpotifySong(BaseModel):
     external_ids: dict
     popularity: float
     available_markets: list[str]
-    album: str
+    album: Optional[str]
     artists: list[dict]
     duration_ms: int
 
@@ -43,9 +44,9 @@ class SpotifyArtist(BaseModel):
     id: str
     name: str
     url: str
-    total_followers: int
-    popularity: float
-    genres: list[str]
+    total_followers: Optional[int]
+    popularity: Optional[float]
+    genres: Optional[list[str]]
 
 
 # Integrated data types
