@@ -6,6 +6,7 @@ from requests.adapters import HTTPAdapter, Retry
 from base64 import b64encode
 from datetime import datetime
 import pytz
+import json
 
 from src.utils.custom_logger import init_logger
 from src.custom_types import (
@@ -109,6 +110,20 @@ class BaseFetcher(ABC):
             raise e
         else:
             return response.json()
+
+    def output_json(
+            self, 
+            data: list[SongSearchResult] | list[IntegratedArtistMetadata] \
+                | list[ArtistSearchResult] | list[IntegratedArtistMetadata], 
+            output_path: str
+        ):
+        if len(data) == 0:
+            self.logger.info(f"No data to write.")
+        else:
+            json_data = [i.dict() for i in data]
+            with open(output_path, 'w') as f:
+                json.dump(json_data, f)
+
 
     @abstractmethod
     def search_one(self):
