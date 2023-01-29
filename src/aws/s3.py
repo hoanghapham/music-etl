@@ -2,6 +2,7 @@ import boto3
 from src.utils.custom_logger import init_logger
 
 class S3Client:
+    """Custom S3 client class"""
 
     def __init__(
         self,
@@ -26,7 +27,13 @@ class S3Client:
             aws_session_token=aws_session_token
         )
 
-    def create_bucket(self, bucket_name):
+    def create_bucket(self, bucket_name: str) -> None:
+        """Create an S3 bucket if it doesn't already exist.
+
+        Parameters
+        ----------
+        bucket_name : str
+        """        
         try:
             self.client.create_bucket(
                 Bucket=bucket_name,
@@ -37,7 +44,17 @@ class S3Client:
         except self.client.meta.client.exceptions.BucketAlreadyExists as err:
             self.logger.info(f"Bucket {bucket_name} already existed.")
     
-    def upload_content_to_s3(self, bucket_name, file_name, content: str, format='json'):
+    def upload_content_to_s3(self, bucket_name: str, file_name: str, content: str):
+        """Upload string content to S3. Currently only support "new-line delimited JSON" content.
+
+        Parameters
+        ----------
+        bucket_name : str
+        file_name : _type_
+        content : str
+            New-line delimited JSON string
+
+        """
         obj = self.client.Object(bucket_name, file_name)
         try:
             obj.put(Body=content)

@@ -44,6 +44,24 @@ class SpotifyClient:
             backoff_factor: int = 1,
             status_forcelist: list[int] = [500, 502, 503, 504, 429]
         ) -> Session:
+        """Initiate a session to interact with Spotify's API server 
+
+        Parameters
+        ----------
+        total_retry : int, optional
+            Total number of retries allowed, by default 5
+        backoff_factor : int, optional
+            This is used to calculate the wait time applied between each retry. 
+            The formula is: {backoff_factor} * 2^({total_retry} - 1)
+            For example, with backof_factor = 1, total_retry = 5, the wait times will be
+            [1, 2, 4, 8, 16]
+        status_forcelist : list[int], optional
+            List of status code that we will enforce retries, by default [500, 502, 503, 504, 429]
+
+        Returns
+        -------
+        Session
+        """
         session = Session()
         retries_strategy = Retry(total=total_retry, 
                                 backoff_factor=backoff_factor, 
@@ -52,6 +70,13 @@ class SpotifyClient:
         return session
 
     def authenticate(self):
+        """Authenticate the client. Steps:
+        - Send a POST request to generate an access token
+        - Add the access token to the header of the session.
+
+        Raises
+        ------
+        """
         auth_headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': "Basic " + b64encode(f"{self.client_id}:{self.client_secret}".encode('ascii')).decode('utf-8')
@@ -76,10 +101,14 @@ class SpotifyClient:
             self.logger.info("Generated new access token")
 
     def check_authentication(self):
+        """Check if the access token is still in valid time time. if not, regenerate the access token.
+        """
         if (datetime.now(pytz.utc) - self.access_token_created_at).total_seconds() >= 3600:
             self.authenticate()
 
     def check_connection(self):
+        """Check if the client can connect to Spotify's server
+        """
         url = "https://api.spotify.com/v1/tracks/4cOdK2wGLETKBW3PvgPWqT"
         response = self.session.get(url)
         try:
@@ -93,6 +122,7 @@ class SpotifyClient:
 
 
 class BaseFetcher(ABC):
+    """Abstract class for various fetchers"""
 
     def __init__(self, client: SpotifyClient, logger: Logger = None) -> None:
         self.client = client
@@ -117,6 +147,7 @@ class BaseFetcher(ABC):
                 | list[ArtistSearchResult] | list[IntegratedArtistMetadata], 
             output_path: str
         ):
+
         if len(data) == 0:
             self.logger.info(f"No data to write.")
         else:
@@ -148,6 +179,20 @@ class SongFetcher(BaseFetcher):
         self.fetch_url = "https://api.spotify.com/v1/tracks"
 
     def search_one(self, mds_song: MdsSong, limit=10) -> SongSearchResult:
+        """Receive a MdsSong object and search for the song in Spotify by using its name and artist.
+
+        Parameters
+        ----------
+        mds_song : MdsSong
+            MdsSong object
+        limit : int, optional
+            Maximum number of songs to be returned, by default 10
+
+        Returns
+        -------
+        SongSearchResult
+            An object represent the search result
+        """        
         self.client.check_authentication()
 
         params = {
@@ -167,6 +212,16 @@ class SongFetcher(BaseFetcher):
             return None
     
     def search_many(self, mds_songs: list[MdsSong]) -> list[SongSearchResult]:
+        """Iterate through the list of MdsSong objects and return a list of SongSearchResult objects
+
+        Parameters
+        ----------
+        mds_songs : list[MdsSong]
+
+        Returns
+        -------
+        list[SongSearchResult]
+        """
 
         # TODO: Implement rate limit
         results = []
@@ -185,14 +240,35 @@ class SongFetcher(BaseFetcher):
         self.logger.info(f"Total found: {total_found} track(s)")
         return results
 
-    def fetch_one(self, spotify_song_id: str):
+    def fetch_one(self, spotify_song_id: str) -> dict:
+        """Fetch one song from Spotify using the Spotify Song ID provided.
+
+        Parameters
+        ----------
+        spotify_song_id : str
+
+        Returns
+        -------
+        dict
+            dict containing one song info
+        """
         self.client.check_authentication()
         params = {"ids": spotify_song_id}
         result = self._fetch_data(self.fetch_url, params)
         return result
 
     def fetch_many(self, song_search_results: list[SongSearchResult]) -> list[IngegratedSongMetadata]:
-        
+        """Iterate through the list of SongSearchResult objects, and return full song metadata, including
+        both the MDS song ID and the Spotify song metadata
+
+        Parameters
+        ----------
+        song_search_results : list[SongSearchResult]
+
+        Returns
+        -------
+        list[IngegratedSongMetadata]
+        """
         results = []
         total = len(song_search_results)
         logging_points = generate_logging_points(total)
@@ -235,7 +311,19 @@ class ArtistFetcher(BaseFetcher):
         self.search_url = "https://api.spotify.com/v1/search"
         self.fetch_url = "https://api.spotify.com/v1/artists"
 
-    def search_one(self, mds_artist: MdsArtist, limit=10):
+    def search_one(self, mds_artist: MdsArtist, limit=10) -> ArtistSearchResult:
+        """Receive a MdsArtist object and search for the artist in Spotify.
+
+        Parameters
+        ----------
+        mds_artist : MdsArtist
+        limit : int, optional
+            Maximum number of artists to be returned, by default 10
+
+        Returns
+        -------
+        ArtistSearchResult
+        """
         self.client.check_authentication()
 
         params = {
@@ -255,7 +343,17 @@ class ArtistFetcher(BaseFetcher):
         else:
             return None
 
-    def search_many(self, mds_artist_list):
+    def search_many(self, mds_artist_list: list[MdsArtist]) -> list[ArtistSearchResult]:
+        """Iterate through the list of MdsArtist objects and return a list of ArtistSearchResult objects    
+
+        Parameters
+        ----------
+        mds_artist_list : list[MdsArtist]
+
+        Returns
+        -------
+        list[ArtistSearchResult]
+        """
         results = []
         total = len(mds_artist_list)
         logging_points = generate_logging_points(total)
@@ -272,14 +370,35 @@ class ArtistFetcher(BaseFetcher):
         self.logger.info(f"Total found: {total_found} artist(s)")
         return results
 
-    def fetch_one(self, spotify_artist_id: str):
+    def fetch_one(self, spotify_artist_id: str) -> dict:
+        """Fetch one artist from Spotify using the artist's Spotify ID
+
+        Parameters
+        ----------
+        spotify_artist_id : str
+
+        Returns
+        -------
+        dict
+            dict containing info about one artist
+        """
         self.client.check_authentication()
         params = {"ids": spotify_artist_id}
         result = self._fetch_data(self.fetch_url, params)
         return result
 
     def fetch_many(self, artist_search_results: list[ArtistSearchResult]) -> list[IntegratedArtistMetadata]:
+        """Iterate through the list of ArtistSearchResult objects and return a list of IntegratedArtistMetadata,
+        containing both data from MDS and Spotify    
 
+        Parameters
+        ----------
+        artist_search_results : list[ArtistSearchResult]
+
+        Returns
+        -------
+        list[IntegratedArtistMetadata]
+        """
         results = []
         total = len(artist_search_results)
         logging_points = generate_logging_points(total)

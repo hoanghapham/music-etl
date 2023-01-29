@@ -9,6 +9,7 @@ from src.utils.custom_logger import init_logger
 from src.custom_types import MdsSong, MdsArtist
 
 class BaseExtractor(ABC):
+    """Abstract class for MDS dataset extractors"""
     
     @abstractmethod
     def __init__(self, logger: Logger = None) -> None:
@@ -23,6 +24,18 @@ class BaseExtractor(ABC):
         pass
     
     def extract_many(self, input_path: str) -> list[MdsSong] | list[MdsArtist]:
+        """Iterate through the files in the input path and extract multiple objects
+
+        Parameters
+        ----------
+        input_path : str
+            Input file path with '*' patterns that signify multiple files.
+
+        Returns
+        -------
+        list[MdsSong] | list[MdsArtist]
+            List of MdsSong objects or MdsArtist objects
+        """
         self.input_path = input_path
         self.file_paths = glob.glob(self.input_path)
         self.num_files = len(self.file_paths)
@@ -39,7 +52,16 @@ class BaseExtractor(ABC):
         
         return data
 
-    def output_json(self, data: list[MdsSong] | list[MdsArtist], output_path):
+    def output_json(self, data: list[MdsSong] | list[MdsArtist], output_path: str):
+        """Write a JSON representation of the objects
+
+        Parameters
+        ----------
+        data : list[MdsSong] | list[MdsArtist]
+            Input MdsSong or MdsArtist objects
+        output_path : str
+            Full destination path.
+        """
         if len(data) == 0:
             self.logger.info(f"No data to write.")
         else:
@@ -52,7 +74,19 @@ class SongExtractor(BaseExtractor):
     def __init__(self, logger: Logger = None) -> None:
         super().__init__(logger)
 
-    def extract_one(self, file_path) -> MdsSong:
+    def extract_one(self, file_path: str) -> MdsSong:
+        """Extract song data from one MDS's H5 file and
+
+        Parameters
+        ----------
+        file_path : str
+            Path to one H5 file
+
+        Returns
+        -------
+        MdsSong
+            An object representing a song extracted from MDS dataset
+        """
 
         with tables.open_file(file_path, 'r') as f:
             nrows = f.root.metadata.songs.nrows
@@ -83,6 +117,18 @@ class ArtistExtractor(BaseExtractor):
         super().__init__(logger)
 
     def extract_one(self, input_path: str) -> MdsArtist:
+        """Extract artist data from one MDS's H5 file
+
+        Parameters
+        ----------
+        input_path : str
+            Path to one H5 file
+
+        Returns
+        -------
+        MdsArtist
+            An object representing a song extracted from MDS dataset
+        """
         with tables.open_file(input_path, 'r') as f:
             nrows = f.root.metadata.songs.nrows
 

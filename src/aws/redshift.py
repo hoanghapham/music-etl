@@ -1,16 +1,16 @@
 import redshift_connector
 from src.utils.custom_logger import init_logger
-
-class RedshiftConnector:
-
+from logging import Logger
+class RedshiftClient:
+    """Custom Redshift client class"""
     def __init__(
             self, 
-            host, 
-            database='dev', 
-            port: int =5439, 
-            user='awsuser', 
-            password=None,
-            logger=None,
+            host: str, 
+            database: str = 'dev', 
+            port: int = 5439, 
+            user: str = 'awsuser', 
+            password: str = None,
+            logger: Logger = None,
             autocommit=True
         ) -> None:
         if logger is None:
@@ -18,16 +18,29 @@ class RedshiftConnector:
         else:
             self.logger = logger
 
+        # Create connection
         try:
             self.conn = redshift_connector.connect(
                 host=host, database=database, port=port, user=user, password=password)
+            self.conn.autocommit = autocommit
         except Exception as e:
             self.logger.error(e)
             raise e
-        
-        self.conn.autocommit = autocommit
 
-    def execute_query(self, query, return_result=False):
+    def execute_query(self, query: str) -> list:
+        """Execute a query against the Redshift database. 
+
+        Parameters
+        ----------
+        query : str
+        return_result : bool, optional
+            Default: False. If True, return the result of the query.
+
+        Returns
+        -------
+        list
+            A list containing rows of the query result
+        """
         cursor = self.conn.cursor()
 
         try:
@@ -37,11 +50,8 @@ class RedshiftConnector:
             self.conn.rollback()
             return None
         else:
-            if return_result:
-                result = cursor.fetch_all()
-                return result
-            else:
-                return None
+            result = cursor.fetch_all()
+            return result
 
     def create_table(self):
         pass
