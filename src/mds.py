@@ -39,12 +39,13 @@ class BaseExtractor(ABC):
         
         return data
 
-    def output_json(self, data, output_path):
+    def output_json(self, data: list[MdsSong] | list[MdsArtist], output_path):
         if len(data) == 0:
             self.logger.info(f"No data to write.")
         else:
+            json_data = [i.dict() for i in data]
             with open(output_path, 'w') as f:
-                json.dump(data, f)
+                json.dump(json_data, f)
 
 
 class SongExtractor(BaseExtractor):
