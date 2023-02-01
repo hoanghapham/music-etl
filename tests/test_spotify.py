@@ -1,9 +1,9 @@
 from pytest import fixture
 import vcr
 import os
-from src.spotify import ArtistFetcher, SongFetcher, SpotifyClient
-from src.custom_types import MsdArtist, MsdSong
 from dotenv import load_dotenv
+from src.spotify import ArtistFetcher, SongFetcher, SpotifyClient
+from src.msd.custom_types import MsdArtist, MsdSong
 from src.utils.custom_logger import init_logger
 
 
