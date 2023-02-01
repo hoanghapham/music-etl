@@ -12,11 +12,7 @@ class BaseExtractor(ABC):
     
     @abstractmethod
     def __init__(self, logger: Logger = None) -> None:
-
-        if logger is None:
-            self.logger = init_logger(self.__class__.__name__)
-        else:
-            self.logger = logger
+        self.logger = logger or init_logger(self.__class__.__name__)
 
     @abstractmethod
     def extract_one(self, input_path: str) -> dict:
@@ -51,7 +47,7 @@ class BaseExtractor(ABC):
         
         return data
 
-    def output_json(self, data: list[MsdSong] | list[MsdArtist], output_path: str):
+    def output_json(self, data: list[MsdSong] | list[MsdArtist] | MsdSong | MsdArtist, output_path: str):
         """Write a JSON representation of the objects
 
         Parameters
@@ -61,12 +57,18 @@ class BaseExtractor(ABC):
         output_path : str
             Full destination path.
         """
-        if len(data) == 0:
-            self.logger.info(f"No data to write.")
-        else:
-            json_data = [i.dict() for i in data]
+        if isinstance(data, MsdSong | MsdArtist):
             with open(output_path, 'w') as f:
-                json.dump(json_data, f)
+                json.dump(data.dict(), f)
+        
+        elif isinstance(data, list):
+
+            if len(data) == 0:
+                self.logger.info(f"No data to write.")
+            else:
+                json_data = [i.dict() for i in data]
+                with open(output_path, 'w') as f:
+                    json.dump(json_data, f)
 
 
 class SongExtractor(BaseExtractor):

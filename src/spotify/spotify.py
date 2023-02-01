@@ -23,11 +23,7 @@ from src.utils.helpers import generate_logging_points
 class SpotifyClient:
     def __init__(self, client_id, client_secret, logger: Logger = None):
 
-        if logger is None:
-            self.logger = init_logger(self.__class__.__name__)
-        else:
-            self.logger = logger
-        
+        self.logger = logger or  init_logger(self.__class__.__name__)
         self.auth_url = 'https://accounts.spotify.com/api/token'
         self.client_id = client_id
         self.client_secret = client_secret
