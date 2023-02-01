@@ -1,5 +1,6 @@
 from pytest import fixture
 from src.msd import SongExtractor, ArtistExtractor
+from src.msd.custom_types import MsdSong, MsdArtist
 import json
 
 @fixture
@@ -20,16 +21,18 @@ class TestSongExtractor():
         song_01 = song_extractor.extract_one(f"{base_path}/input/song_01.h5")
 
         with open(f"{base_path}/output/song_01.json", 'r') as f:
-            output_song_01 = json.load(f)
+            data = json.load(f)
 
+        output_song_01 = MsdSong(**data)
         assert song_01 == output_song_01
 
     def test_extract_many(self, song_extractor: SongExtractor):
         songs = song_extractor.extract_many(f"{base_path}/input/*.h5")
 
         with open(f"{base_path}/output/songs.json", 'r') as f:
-            output_songs = json.load(f)
+            data_json = json.load(f)
 
+        output_songs = [MsdSong(**data) for data in data_json]
         assert all([i in output_songs for i in songs])
 
 
@@ -38,15 +41,17 @@ class TestArtistExtractor():
         artist_01 = artist_extractor.extract_one(f"{base_path}/input/song_01.h5")
 
         with open(f"{base_path}/output/artist_01.json", 'r') as f:
-            output_artist_01 = json.load(f)
-
+            data = json.load(f)
+        
+        output_artist_01 = MsdArtist(**data)
         assert artist_01 == output_artist_01
 
     def test_extract_many(self, artist_extractor: ArtistExtractor):
         artists = artist_extractor.extract_many(f"{base_path}/input/*.h5")
 
         with open(f"{base_path}/output/artists.json", 'r') as f:
-            output_artists = json.load(f)
+            data_json = json.load(f)
         
+        output_artists = [MsdArtist(**data) for data in data_json]
         assert all([i in output_artists for i in artists])
 

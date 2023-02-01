@@ -8,8 +8,8 @@ from src.utils.custom_logger import init_logger
 
 
 # Setup
-load_dotenv()
 my_vcr = vcr.VCR(filter_headers=['Authorization'])
+my_vcr.record_mode = 'new_episodes'
 fixture_base_path = 'tests/fixtures/vcr_cassettes/spotify'
 logger = init_logger(__file__)
 
@@ -43,10 +43,12 @@ def msd_songs():
     ]
 
 @fixture(scope='module')
+@my_vcr.use_cassette(f"{fixture_base_path}/SpotifyClient.yaml")
 def client():
     client_id = os.environ.get('SPOTIFY_CLIENT_ID')
     client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET') 
-    return SpotifyClient(client_id, client_secret)
+    client = SpotifyClient(client_id, client_secret)
+    return client
 
 @fixture(scope='module')
 def song_fetcher(client):
