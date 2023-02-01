@@ -9,7 +9,7 @@ import pytz
 import json
 
 from src.utils.custom_logger import init_logger
-from src.custom_types import (
+from msd.custom_types import (
     MsdArtist, 
     MsdSong, 
     SpotifySong,
@@ -431,4 +431,7 @@ class ArtistFetcher(BaseFetcher):
     
 
 class AlbumFetcher():
+    pass
+
+class AudioFeaturesFetcher():
     pass

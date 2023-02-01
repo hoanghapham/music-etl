@@ -3,10 +3,9 @@ from logging import Logger
 import json
 import glob
 import tables
-from pydantic import parse_obj_as
 
 from src.utils.custom_logger import init_logger
-from src.custom_types import MsdSong, MsdArtist
+from msd.custom_types import MsdSong, MsdArtist
 
 class BaseExtractor(ABC):
     """Abstract class for MSD dataset extractors"""
@@ -110,7 +109,7 @@ class SongExtractor(BaseExtractor):
                     'year': year
                 }
 
-        return parse_obj_as(MsdSong, data)
+        return MsdSong(**data)
 
 class ArtistExtractor(BaseExtractor):
     def __init__(self, logger: Logger = None) -> None:
@@ -145,4 +144,4 @@ class ArtistExtractor(BaseExtractor):
                     'tags': artist_terms
                 }
         
-        return parse_obj_as(MsdArtist, data)
+        return MsdArtist(**data)
