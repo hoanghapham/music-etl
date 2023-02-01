@@ -9,15 +9,13 @@ import pytz
 import json
 
 from src.utils.custom_logger import init_logger
-from msd.custom_types import (
-    MsdArtist, 
-    MsdSong, 
+from src.custom_types import IngegratedSongMetadata, IntegratedArtistMetadata
+from src.msd.custom_types import MsdArtist, MsdSong
+from src.spotify.custom_types import (
     SpotifySong,
     SpotifyArtist,
     SongSearchResult,
     ArtistSearchResult,
-    IngegratedSongMetadata,
-    IntegratedArtistMetadata
 )
 from src.utils.helpers import generate_logging_points
 

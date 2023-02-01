@@ -5,7 +5,7 @@ import glob
 import tables
 
 from src.utils.custom_logger import init_logger
-from msd.custom_types import MsdSong, MsdArtist
+from src.msd.custom_types import MsdSong, MsdArtist
 
 class BaseExtractor(ABC):
     """Abstract class for MSD dataset extractors"""
