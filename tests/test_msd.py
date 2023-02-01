@@ -1,5 +1,5 @@
 from pytest import fixture
-from src.mds import SongExtractor, ArtistExtractor
+from src.msd import SongExtractor, ArtistExtractor
 import json
 
 @fixture
@@ -12,7 +12,7 @@ def artist_extractor():
     artist_extractor = ArtistExtractor()
     return artist_extractor
 
-base_path = "tests/fixtures/mds"
+base_path = "tests/fixtures/msd"
 
 class TestSongExtractor():
 

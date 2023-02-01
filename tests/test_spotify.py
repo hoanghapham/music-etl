@@ -2,7 +2,7 @@ from pytest import fixture
 import vcr
 import os
 from src.spotify import ArtistFetcher, SongFetcher, SpotifyClient
-from src.custom_types import MdsArtist, MdsSong
+from src.custom_types import MsdArtist, MsdSong
 from dotenv import load_dotenv
 from src.utils.custom_logger import init_logger
 
@@ -17,8 +17,8 @@ logger = init_logger(__file__)
 # Test SongFetcher ----------------------------------------
 
 @fixture
-def mds_song():
-    return MdsSong(
+def msd_song():
+    return MsdSong(
         id='SOBBUGU12A8C13E95D',
         title='Setting Fire to Sleeping Giants',
         artist_id='ARMAC4T1187FB3FA4C',
@@ -26,15 +26,15 @@ def mds_song():
     )
 
 @fixture
-def mds_songs():
+def msd_songs():
     return [
-        MdsSong(
+        MsdSong(
             id='SOBBUGU12A8C13E95D',
             title='Setting Fire to Sleeping Giants',
             artist_id='ARMAC4T1187FB3FA4C',
             artist_name='The Dillinger Escape Plan'
         ),
-        MdsSong(
+        MsdSong(
             id='SOOGFBZ12AC3DF7FF2',
             title='In A Subtle Way',
             artist_id='ARDD1RC1187B9B52B4',
@@ -55,16 +55,16 @@ def song_fetcher(client):
 
 @fixture
 @my_vcr.use_cassette(f"{fixture_base_path}/SongFetcher_search_many.yaml")
-def SongFetcher_search_many(song_fetcher: SongFetcher, mds_songs):
-    result = song_fetcher.search_many(mds_songs)
+def SongFetcher_search_many(song_fetcher: SongFetcher, msd_songs):
+    result = song_fetcher.search_many(msd_songs)
     return result
 
 
 class TestSongFetcher():
 
     @my_vcr.use_cassette(f"{fixture_base_path}/SongFetcher_search_one.yml")
-    def test_search_one(self, song_fetcher: SongFetcher, mds_song):
-        result = song_fetcher.search_one(mds_song)
+    def test_search_one(self, song_fetcher: SongFetcher, msd_song):
+        result = song_fetcher.search_one(msd_song)
         assert result is not None
 
     def test_search_many(self, SongFetcher_search_many):
@@ -89,28 +89,28 @@ def artist_fetcher(client):
     return ArtistFetcher(client)
 
 @fixture
-def mds_artist():
-    return MdsArtist(id='ARMJAGH1187FB546F3', name='The Box Tops')
+def msd_artist():
+    return MsdArtist(id='ARMJAGH1187FB546F3', name='The Box Tops')
 
 @fixture
-def mds_artists():
+def msd_artists():
     return [
-        MdsArtist(id='ARMJAGH1187FB546F3', name='The Box Tops'),
-        MdsArtist(id='ARKRRTF1187B9984DA', name='Sonora Santanera')
+        MsdArtist(id='ARMJAGH1187FB546F3', name='The Box Tops'),
+        MsdArtist(id='ARKRRTF1187B9984DA', name='Sonora Santanera')
     ]
 
 @fixture
 @my_vcr.use_cassette(f"{fixture_base_path}/ArtistFetcher_search_many.yaml")
-def ArtistFetcher_search_many(artist_fetcher: ArtistFetcher, mds_artists):
-    result = artist_fetcher.search_many(mds_artists)
+def ArtistFetcher_search_many(artist_fetcher: ArtistFetcher, msd_artists):
+    result = artist_fetcher.search_many(msd_artists)
     return result
 
 
 class TestArtistFetcher():
 
     @my_vcr.use_cassette(f"{fixture_base_path}/ArtistFetcher_search_one.yaml")
-    def test_search_one(self, artist_fetcher: ArtistFetcher, mds_artist):
-        result = artist_fetcher.search_one(mds_artist)
+    def test_search_one(self, artist_fetcher: ArtistFetcher, msd_artist):
+        result = artist_fetcher.search_one(msd_artist)
         assert result is not None
 
     def test_search_many(self, ArtistFetcher_search_many):

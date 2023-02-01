@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 from typing import Optional
 
-# MDS types
+# MSD types
 
-class MdsSong(BaseModel):
-    """Class to represent songs extracted from the MDS dataset"""    
+class MsdSong(BaseModel):
+    """Class to represent songs extracted from the MSD dataset"""    
     id: str
     title: str
     release: Optional[str]
@@ -13,8 +13,8 @@ class MdsSong(BaseModel):
     artist_name: str
     year: Optional[int]
 
-class MdsArtist(BaseModel):
-    """Class to represent artists extracted from the MDS dataset"""
+class MsdArtist(BaseModel):
+    """Class to represent artists extracted from the MSD dataset"""
     id: str
     name: str
     location: Optional[str]
@@ -25,7 +25,7 @@ class MdsArtist(BaseModel):
 
 class SongSearchResult(BaseModel):
     """Class to represent the search results of spotify.SongFetcher.search_one()"""
-    mds_song_id: str
+    msd_song_id: str
     spotify_song_ids: list[str]
 
 class SpotifySong(BaseModel):
@@ -43,7 +43,7 @@ class SpotifySong(BaseModel):
 
 class ArtistSearchResult(BaseModel):
     """Class to represent the search results of spotify.ArtistFetcher.search_one()"""
-    mds_artist_id: str
+    msd_artist_id: str
     spotify_artist_ids: list[str]
 
 
@@ -59,11 +59,11 @@ class SpotifyArtist(BaseModel):
 
 # Integrated data types
 class IngegratedSongMetadata(BaseModel):
-    """Class to represent song data integrated between MDS and Spotify"""
-    mds_song_id: str
+    """Class to represent song data integrated between MSD and Spotify"""
+    msd_song_id: str
     spotify_songs: list[SpotifySong]
 
 class IntegratedArtistMetadata(BaseModel):
-    """class to represent artist data integrated between MDS and Spotify"""
-    mds_artist_id: str
+    """class to represent artist data integrated between MSD and Spotify"""
+    msd_artist_id: str
     spotify_artists: list[SpotifyArtist]

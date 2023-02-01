@@ -10,8 +10,8 @@ import json
 
 from src.utils.custom_logger import init_logger
 from src.custom_types import (
-    MdsArtist, 
-    MdsSong, 
+    MsdArtist, 
+    MsdSong, 
     SpotifySong,
     SpotifyArtist,
     SongSearchResult,
@@ -178,13 +178,13 @@ class SongFetcher(BaseFetcher):
         self.search_url = "https://api.spotify.com/v1/search"
         self.fetch_url = "https://api.spotify.com/v1/tracks"
 
-    def search_one(self, mds_song: MdsSong, limit=10) -> SongSearchResult:
-        """Receive a MdsSong object and search for the song in Spotify by using its name and artist.
+    def search_one(self, msd_song: MsdSong, limit=10) -> SongSearchResult:
+        """Receive a MsdSong object and search for the song in Spotify by using its name and artist.
 
         Parameters
         ----------
-        mds_song : MdsSong
-            MdsSong object
+        msd_song : MsdSong
+            MsdSong object
         limit : int, optional
             Maximum number of songs to be returned, by default 10
 
@@ -196,7 +196,7 @@ class SongFetcher(BaseFetcher):
         self.client.check_authentication()
 
         params = {
-            'q': f"track:{mds_song.title} artist:{mds_song.artist_name}",
+            'q': f"track:{msd_song.title} artist:{msd_song.artist_name}",
             'type': 'track',
             'limit': limit
         }
@@ -204,19 +204,19 @@ class SongFetcher(BaseFetcher):
         result = self._fetch_data(self.search_url, params)
         if result is not None:
             matched_results = {
-                'mds_song_id': mds_song.id,
+                'msd_song_id': msd_song.id,
                 'spotify_song_ids': [i['id'] for i in result['tracks']['items']]
             }
             return SongSearchResult.parse_obj(matched_results)
         else:
             return None
     
-    def search_many(self, mds_songs: list[MdsSong]) -> list[SongSearchResult]:
-        """Iterate through the list of MdsSong objects and return a list of SongSearchResult objects
+    def search_many(self, msd_songs: list[MsdSong]) -> list[SongSearchResult]:
+        """Iterate through the list of MsdSong objects and return a list of SongSearchResult objects
 
         Parameters
         ----------
-        mds_songs : list[MdsSong]
+        msd_songs : list[MsdSong]
 
         Returns
         -------
@@ -225,11 +225,11 @@ class SongFetcher(BaseFetcher):
 
         # TODO: Implement rate limit
         results = []
-        total = len(mds_songs)
+        total = len(msd_songs)
         logging_point = generate_logging_points(total)
         total_found = 0
 
-        for i, song in enumerate(mds_songs):
+        for i, song in enumerate(msd_songs):
             result = self.search_one(song)
             results.append(SongSearchResult.parse_obj(result))
             total_found += len(result.spotify_song_ids)
@@ -259,7 +259,7 @@ class SongFetcher(BaseFetcher):
 
     def fetch_many(self, song_search_results: list[SongSearchResult]) -> list[IngegratedSongMetadata]:
         """Iterate through the list of SongSearchResult objects, and return full song metadata, including
-        both the MDS song ID and the Spotify song metadata
+        both the MSD song ID and the Spotify song metadata
 
         Parameters
         ----------
@@ -299,7 +299,7 @@ class SongFetcher(BaseFetcher):
                     spotify_results.append(SpotifySong.parse_obj(data))
             
                 results.append(IngegratedSongMetadata.parse_obj(
-                    {'mds_song_id': item.mds_song_id, 'spotify_songs': spotify_results}))
+                    {'msd_song_id': item.msd_song_id, 'spotify_songs': spotify_results}))
 
         return results
 
@@ -311,12 +311,12 @@ class ArtistFetcher(BaseFetcher):
         self.search_url = "https://api.spotify.com/v1/search"
         self.fetch_url = "https://api.spotify.com/v1/artists"
 
-    def search_one(self, mds_artist: MdsArtist, limit=10) -> ArtistSearchResult:
-        """Receive a MdsArtist object and search for the artist in Spotify.
+    def search_one(self, msd_artist: MsdArtist, limit=10) -> ArtistSearchResult:
+        """Receive a MsdArtist object and search for the artist in Spotify.
 
         Parameters
         ----------
-        mds_artist : MdsArtist
+        msd_artist : MsdArtist
         limit : int, optional
             Maximum number of artists to be returned, by default 10
 
@@ -327,7 +327,7 @@ class ArtistFetcher(BaseFetcher):
         self.client.check_authentication()
 
         params = {
-            'q': f"artist:{mds_artist.name}",
+            'q': f"artist:{msd_artist.name}",
             'type': 'artist',
             'limit': limit
         }
@@ -336,30 +336,30 @@ class ArtistFetcher(BaseFetcher):
         
         if result is not None:
             matched_results = {
-                'mds_artist_id': mds_artist.id,
+                'msd_artist_id': msd_artist.id,
                 'spotify_artist_ids': [i['id'] for i in result['artists']['items']]
             }
             return ArtistSearchResult.parse_obj(matched_results)
         else:
             return None
 
-    def search_many(self, mds_artist_list: list[MdsArtist]) -> list[ArtistSearchResult]:
-        """Iterate through the list of MdsArtist objects and return a list of ArtistSearchResult objects    
+    def search_many(self, msd_artist_list: list[MsdArtist]) -> list[ArtistSearchResult]:
+        """Iterate through the list of MsdArtist objects and return a list of ArtistSearchResult objects    
 
         Parameters
         ----------
-        mds_artist_list : list[MdsArtist]
+        msd_artist_list : list[MsdArtist]
 
         Returns
         -------
         list[ArtistSearchResult]
         """
         results = []
-        total = len(mds_artist_list)
+        total = len(msd_artist_list)
         logging_points = generate_logging_points(total)
         total_found = 0
 
-        for i, artist_name in enumerate(mds_artist_list):
+        for i, artist_name in enumerate(msd_artist_list):
             result = self.search_one(artist_name)
             results.append(ArtistSearchResult.parse_obj(result))
             total_found += len(result.spotify_artist_ids)
@@ -389,7 +389,7 @@ class ArtistFetcher(BaseFetcher):
 
     def fetch_many(self, artist_search_results: list[ArtistSearchResult]) -> list[IntegratedArtistMetadata]:
         """Iterate through the list of ArtistSearchResult objects and return a list of IntegratedArtistMetadata,
-        containing both data from MDS and Spotify    
+        containing both data from MSD and Spotify    
 
         Parameters
         ----------
@@ -425,7 +425,7 @@ class ArtistFetcher(BaseFetcher):
                     spotify_results.append(SpotifyArtist.parse_obj(data))
                 
                 results.append(IntegratedArtistMetadata.parse_obj(
-                    {'mds_artist_id': item.mds_artist_id, 'spotify_artists': spotify_results}))
+                    {'msd_artist_id': item.msd_artist_id, 'spotify_artists': spotify_results}))
 
         return results
     

@@ -1,5 +1,5 @@
 table_name: artists
-schema_name: mds
+schema_name: msd
 columns:
   - column_name: id
     data_type: VARCHAR(256)
