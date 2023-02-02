@@ -3,6 +3,9 @@
 .cache
 *.egg*
 
-data/*
+**/data/*
+**/tmp/*
 **/__pycache__/*
 workpad/*
+
+config.cfg

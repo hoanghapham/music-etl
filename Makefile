@@ -9,7 +9,23 @@ help:
 	@echo "  Command: desc"
 
 prepare-dev-env:
-	# terraform commands, pip install etc...
+	curl https://pyenv.run | bash
+	pyenv install -f 3.10.7
+	pyenv local 3.10.7
+	pip install -r requirements.txt
+	pip install -e .
+	cd terraform/dev/ && terraform apply -auto-approve && cd ../../ || cd ../../
+
+
+download-msd-subset:
+	python3 dev/flow/music_etl.py
+
+
+
+run-dev-flow:
+	python3 dev/flows/music_etl.py
+
+
 
 prepare-prod-env:
 	# terraform commands, pip install...
@@ -31,9 +47,3 @@ install-terraform:
 	echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $$(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 	sudo apt update ; sudo apt install terraform
 
-prepare-environment:
-	curl https://pyenv.run | bash
-	pyenv install -f 3.10.7
-	pyenv local 3.10.7
-	pip install -r requirements.txt
-	pip install -e .
