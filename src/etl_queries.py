@@ -287,7 +287,7 @@ class AnalyticsQueries:
     FROM unnested
     LEFT JOIN msd.songs AS msd ON unnested.msd_song_id = msd.id
     LEFT JOIN spotify.songs AS spotify ON unnested.spotify_song_id = spotify.id
-    WHERE sportify.id is not null
+    WHERE spotify.id is not null
     """
 
     create_table_analytics_artists = """

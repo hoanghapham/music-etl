@@ -10,14 +10,18 @@ class DataQualityOperator:
         self.client = client
 
     def run_test(self, test: Test):
-        result = self.client.execute_query(test.query)
-        
-        if len(result) == 0:
-            self.logger.info(f"Data test {test.name} PASSED.")
-            return True
-        else:
-            self.logger.info(f"Data test {test.name} FAIED.")
+        try:
+            result = self.client.execute_query(test.query)
+        except Exception as e:
+            self.logger.error(e)
             return False
+        else:
+            if len(result) == 0:
+                self.logger.info(f"Data test {test.name} PASSED.")
+                return True
+            else:
+                self.logger.info(f"Data test {test.name} FAIED.")
+                return False
 
     def run_multi_tests(self, tests: list[Test]):
 
