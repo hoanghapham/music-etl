@@ -6,24 +6,19 @@ from requests.adapters import HTTPAdapter, Retry
 from base64 import b64encode
 from datetime import datetime
 import pytz
-import json
 
 from src.utils.custom_logger import init_logger
-from src.custom_types import IngegratedSongMetadata, IntegratedArtistMetadata
+from src.utils.helper import iter_execute, write_json
+from src.integration.custom_types import IngegratedSongMetadata, IntegratedArtistMetadata
 from src.msd.custom_types import MsdArtist, MsdSong
-from src.spotify.custom_types import (
-    SpotifySong,
-    SpotifyArtist,
-    SongSearchResult,
-    ArtistSearchResult,
-)
-from src.utils.helpers import generate_logging_points
+from src.spotify.custom_types import SpotifySong, SpotifyArtist
+from src.integration.custom_types import MappedSong, MappedArtist
 
 
 class SpotifyClient:
     def __init__(self, client_id, client_secret, logger: Logger = None):
 
-        self.logger = logger or  init_logger(self.__class__.__name__)
+        self.logger = logger or init_logger(self.__class__.__name__)
         self.auth_url = 'https://accounts.spotify.com/api/token'
         self.client_id = client_id
         self.client_secret = client_secret
@@ -137,18 +132,13 @@ class BaseFetcher(ABC):
 
     def output_json(
             self, 
-            data: list[SongSearchResult] | list[IntegratedArtistMetadata] \
-                | list[ArtistSearchResult] | list[IntegratedArtistMetadata], 
-            output_path: str
+            data: list[MappedArtist | MappedSong | SpotifyArtist | SpotifySong], 
+            output_path: str,
+            new_line_delimited: bool = False
         ):
-
-        if len(data) == 0:
-            self.logger.info(f"No data to write.")
-        else:
-            json_data = [i.dict() for i in data]
-            with open(output_path, 'w') as f:
-                json.dump(json_data, f)
-
+        write_json(data, output_path, new_line_delimited, self.logger)
+        
+                
     @abstractmethod
     def search_one(self):
         pass
@@ -172,7 +162,7 @@ class SongFetcher(BaseFetcher):
         self.search_url = "https://api.spotify.com/v1/search"
         self.fetch_url = "https://api.spotify.com/v1/tracks"
 
-    def search_one(self, msd_song: MsdSong, limit=10) -> SongSearchResult:
+    def search_one(self, msd_song: MsdSong, limit=10) -> MappedSong:
         """Receive a MsdSong object and search for the song in Spotify by using its name and artist.
 
         Parameters
@@ -184,13 +174,13 @@ class SongFetcher(BaseFetcher):
 
         Returns
         -------
-        SongSearchResult
+        MappedSong
             An object represent the search result
         """        
         self.client.check_authentication()
 
         params = {
-            'q': f"track:{msd_song.title} artist:{msd_song.artist_name}",
+            'q': f"track:{msd_song.name} artist:{msd_song.artist_name}",
             'type': 'track',
             'limit': limit
         }
@@ -201,12 +191,12 @@ class SongFetcher(BaseFetcher):
                 'msd_song_id': msd_song.id,
                 'spotify_song_ids': [i['id'] for i in result['tracks']['items']]
             }
-            return SongSearchResult.parse_obj(matched_results)
+            return MappedSong(**matched_results)
         else:
             return None
     
-    def search_many(self, msd_songs: list[MsdSong]) -> list[SongSearchResult]:
-        """Iterate through the list of MsdSong objects and return a list of SongSearchResult objects
+    def search_many(self, msd_songs_list: list[MsdSong]) -> list[MappedSong]:
+        """Iterate through the list of MsdSong objects and return a list of MappedSong objects
 
         Parameters
         ----------
@@ -214,24 +204,19 @@ class SongFetcher(BaseFetcher):
 
         Returns
         -------
-        list[SongSearchResult]
+        list[MappedSong]
         """
 
         # TODO: Implement rate limit
-        results = []
-        total = len(msd_songs)
-        logging_point = generate_logging_points(total)
-        total_found = 0
 
-        for i, song in enumerate(msd_songs):
-            result = self.search_one(song)
-            results.append(SongSearchResult.parse_obj(result))
-            total_found += len(result.spotify_song_ids)
+        results = iter_execute(
+            func=self.search_one, 
+            iterable=msd_songs_list, 
+            logger=self.logger,
+            logging_interval=10,
+            message_template="Processed {} of {} songs ({}%)"
+        )
 
-            if i in logging_point:
-                self.logger.info(f"Processed {i} of {total} songs ({round(i / total * 100, 2)}%)")
-
-        self.logger.info(f"Total found: {total_found} track(s)")
         return results
 
     def fetch_one(self, spotify_song_id: str) -> dict:
@@ -251,33 +236,28 @@ class SongFetcher(BaseFetcher):
         result = self._fetch_data(self.fetch_url, params)
         return result
 
-    def fetch_many(self, song_search_results: list[SongSearchResult]) -> list[IngegratedSongMetadata]:
-        """Iterate through the list of SongSearchResult objects, and return full song metadata, including
+    def fetch_many(self, mapped_songs: list[MappedSong]) -> list[SpotifySong]:
+        """Iterate through the list of MappedSong objects, and return full song metadata, including
         both the MSD song ID and the Spotify song metadata
 
         Parameters
         ----------
-        song_search_results : list[SongSearchResult]
+        mapped_songs : list[MappedSong]
 
         Returns
         -------
         list[IngegratedSongMetadata]
         """
-        results = []
-        total = len(song_search_results)
-        logging_points = generate_logging_points(total)
 
-        for i, item in enumerate(song_search_results):
-            if i in logging_points:
-                self.logger.info(f"Processing {i} of {total} songs ({round(i / total * 100, 2)}%)")
+        def fetch_func(item: MappedSong) -> list:
+            result = []
 
             if len(item.spotify_song_ids) > 0:
             
-                spotify_results = []
                 params = {'ids': ','.join(item.spotify_song_ids)}
-                result = self._fetch_data(self.fetch_url, params)
+                fetch_results = self._fetch_data(self.fetch_url, params)
 
-                for track in result['tracks']:
+                for track in fetch_results['tracks']:
                     data = {
                         'id'                : track['id'],
                         'name'              : track['name'],
@@ -285,15 +265,22 @@ class SongFetcher(BaseFetcher):
                         'external_ids'      : track['external_ids'],
                         'popularity'        : track['popularity'],
                         'available_markets' : track['available_markets'],
-                        'album'             : track['album']['id'],
+                        'album_id'          : track['album']['id'],
                         'artists'           : [{'artist_id': artist['id'], 'artist_name': artist['name']}
                                                 for artist in track['artists']],
                         'duration_ms'       : track['duration_ms']
                     }
-                    spotify_results.append(SpotifySong.parse_obj(data))
-            
-                results.append(IngegratedSongMetadata.parse_obj(
-                    {'msd_song_id': item.msd_song_id, 'spotify_songs': spotify_results}))
+                    result.append(SpotifySong(**data))
+
+            return result
+        
+        results = iter_execute(
+            func=fetch_func, 
+            iterable=mapped_songs, 
+            logger=self.logger,
+            logging_interval=10,
+            message_template="Processing {} of {} songs ({}))"
+        )
 
         return results
 
@@ -305,7 +292,7 @@ class ArtistFetcher(BaseFetcher):
         self.search_url = "https://api.spotify.com/v1/search"
         self.fetch_url = "https://api.spotify.com/v1/artists"
 
-    def search_one(self, msd_artist: MsdArtist, limit=10) -> ArtistSearchResult:
+    def search_one(self, msd_artist: MsdArtist, limit=10) -> MappedArtist:
         """Receive a MsdArtist object and search for the artist in Spotify.
 
         Parameters
@@ -316,7 +303,7 @@ class ArtistFetcher(BaseFetcher):
 
         Returns
         -------
-        ArtistSearchResult
+        MappedArtist
         """
         self.client.check_authentication()
 
@@ -333,35 +320,29 @@ class ArtistFetcher(BaseFetcher):
                 'msd_artist_id': msd_artist.id,
                 'spotify_artist_ids': [i['id'] for i in result['artists']['items']]
             }
-            return ArtistSearchResult.parse_obj(matched_results)
+            return MappedArtist(**matched_results)
         else:
             return None
 
-    def search_many(self, msd_artist_list: list[MsdArtist]) -> list[ArtistSearchResult]:
-        """Iterate through the list of MsdArtist objects and return a list of ArtistSearchResult objects    
+    def search_many(self, msd_artists_list: list[MsdArtist]) -> list[MappedArtist]:
+        """Iterate through the list of MsdArtist objects and return a list of MappedArtist objects    
 
         Parameters
         ----------
-        msd_artist_list : list[MsdArtist]
+        msd_artists_list : list[MsdArtist]
 
         Returns
         -------
-        list[ArtistSearchResult]
+        list[MappedArtist]
         """
-        results = []
-        total = len(msd_artist_list)
-        logging_points = generate_logging_points(total)
-        total_found = 0
 
-        for i, artist_name in enumerate(msd_artist_list):
-            result = self.search_one(artist_name)
-            results.append(ArtistSearchResult.parse_obj(result))
-            total_found += len(result.spotify_artist_ids)
-
-            if i in logging_points:
-                self.logger.info(f"Processed {i} of {total} artists ({round(i / total * 100, 2)}%)")
-
-        self.logger.info(f"Total found: {total_found} artist(s)")
+        results = iter_execute(
+            func=self.search_one, 
+            iterable=msd_artists_list,
+            logger=self.logger,
+            logging_interval=10,
+            message_template="Processed {} of {} artists ({}%)"
+        )
         return results
 
     def fetch_one(self, spotify_artist_id: str) -> dict:
@@ -381,33 +362,28 @@ class ArtistFetcher(BaseFetcher):
         result = self._fetch_data(self.fetch_url, params)
         return result
 
-    def fetch_many(self, artist_search_results: list[ArtistSearchResult]) -> list[IntegratedArtistMetadata]:
-        """Iterate through the list of ArtistSearchResult objects and return a list of IntegratedArtistMetadata,
+    def fetch_many(self, artist_search_results: list[MappedArtist]) -> list[SpotifyArtist]:
+        """Iterate through the list of MappedArtist objects and return a list of IntegratedArtistMetadata,
         containing both data from MSD and Spotify    
 
         Parameters
         ----------
-        artist_search_results : list[ArtistSearchResult]
+        artist_search_results : list[MappedArtist]
 
         Returns
         -------
         list[IntegratedArtistMetadata]
         """
-        results = []
-        total = len(artist_search_results)
-        logging_points = generate_logging_points(total)
-
-        for i, item in enumerate(artist_search_results):
-            if i in logging_points:
-                self.logger.info(f"Processing {i} of total artists ({round(i / total * 100, 2)}%)")
+        def fetch_func(item: MappedArtist) -> list:
+            
+            result = []
 
             if len(item.spotify_artist_ids) > 0:
 
-                spotify_results = []
                 params = {"ids": ','.join(item.spotify_artist_ids)}
-                result = self._fetch_data(self.fetch_url, params)
+                fetch_results = self._fetch_data(self.fetch_url, params)
 
-                for artist in result['artists']:
+                for artist in fetch_results['artists']:
                     data = {
                         'id'                : artist['id'],
                         'name'              : artist['name'],
@@ -416,10 +392,17 @@ class ArtistFetcher(BaseFetcher):
                         'popularity'        : artist['popularity'],
                         'genres'            : artist['genres'],
                     }
-                    spotify_results.append(SpotifyArtist.parse_obj(data))
-                
-                results.append(IntegratedArtistMetadata.parse_obj(
-                    {'msd_artist_id': item.msd_artist_id, 'spotify_artists': spotify_results}))
+                    result.append(SpotifyArtist(**data))
+
+            return result
+
+        results = iter_execute(
+            func=fetch_func, 
+            iterable=artist_search_results,
+            logger=self.logger,
+            logging_interval=10,
+            message_template="Processing {} of total {} artists ({}%)"
+        )
 
         return results
     

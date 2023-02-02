@@ -1,4 +1,5 @@
 import redshift_connector
+from redshift_connector import ProgrammingError
 from src.utils.custom_logger import init_logger
 from logging import Logger
 class RedshiftClient:
@@ -13,21 +14,20 @@ class RedshiftClient:
             logger: Logger = None,
             autocommit=True
         ) -> None:
-        if logger is None:
-            self.logger = init_logger(self.__class__.__name__)
-        else:
-            self.logger = logger
+        self.logger = logger or init_logger(self.__class__.__name__)
 
         # Create connection
         try:
             self.conn = redshift_connector.connect(
                 host=host, database=database, port=port, user=user, password=password)
             self.conn.autocommit = autocommit
+            self.logger.info(f"Connected to Redshift cluster")
         except Exception as e:
+            self.logger.error(f"Failed to connect to Redshift cluster")
             self.logger.error(e)
             raise e
 
-    def execute_query(self, query: str) -> list:
+    def execute_query(self, query: str, return_result=False) -> list:
         """Execute a query against the Redshift database. 
 
         Parameters
@@ -47,11 +47,18 @@ class RedshiftClient:
             cursor.execute(query)
         except Exception as e:
             self.logger.error(e)
+            self.logger.error(f"Executed query: {query}")
             self.conn.rollback()
+            cursor.close()
             return None
         else:
-            result = cursor.fetch_all()
-            return result
+            try:
+                result = cursor.fetchall()
+                cursor.close()
+                return result
+            except ProgrammingError as e:
+                return None
+
 
     def create_table(self):
         pass
