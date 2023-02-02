@@ -8,18 +8,25 @@ help:
 	@echo "  Command: desc"
 	@echo "  Command: desc"
 
-prepare-dev-env:
+install-pyenv:
 	curl https://pyenv.run | bash
 	pyenv install -f 3.10.7
-	pyenv local 3.10.7
+
+
+prepare-dev-env:
+	pyenv virtualenv 3.10.7 dev
+	pyenv local dev
+	pyenv activate dev
 	pip install -r requirements.txt
 	pip install -e .
 	cd terraform/dev/ && terraform apply -auto-approve && cd ../../ || cd ../../
 
 
 download-msd-subset:
-	python3 dev/flow/music_etl.py
+	python3 dev/flow/down.py
 
+destroy-dev-env:
+	cd terraform/ && terraform destroy -auto-approve && cd ../../ || cd ../../
 
 
 run-dev-flow:
