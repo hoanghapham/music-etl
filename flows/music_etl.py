@@ -9,10 +9,10 @@ from src.msd.custom_types import MsdSong, MsdArtist
 from src.data_quality import DataQualityOperator, all_tests
 
 from prefect import task, flow, get_run_logger
-from prefect.task_runners import ConcurrentTaskRunner
+from prefect.task_runners import ConcurrentTaskRunner, SequentialTaskRunner
 
 @flow(
-    task_runner=ConcurrentTaskRunner(),
+    task_runner=SequentialTaskRunner(),
     name='music_etl', 
     description="""
         Load source msd data from S3, search for songs and artists in Spotify, and then combine in final analytics tables.
@@ -232,7 +232,7 @@ def music_etl():
         logger.info("Creating spotify.songs table...")
         redshift.execute_query(analytics.create_table_spotify_songs)
         
-        logger.info("Creating spotify.songs table...")
+        logger.info("Creating spotify.artists table...")
         redshift.execute_query(analytics.create_table_spotify_artists)
 
 
@@ -261,7 +261,7 @@ def music_etl():
 
     @task
     def run_data_quality_tests(test):
-        data_quality = DataQualityOperator(client=redshift)
+        data_quality = DataQualityOperator(client=redshift, logger=logger)
         data_quality.run_test(test)
 
 
@@ -288,7 +288,7 @@ def music_etl():
     task_fetch_spotify_artists          = fetch_spotify_artists.submit(task_map_artists)
     task_upload_spotify_artists         = upload_spotify_artists.submit(wait_for=[task_fetch_spotify_artists])
     
-    task_stage_spotify_tables            = stage_spotify_tables.submit(wait_for=[task_upload_spotify_songs, task_upload_spotify_artists])
+    task_stage_spotify_tables           = stage_spotify_tables.submit(wait_for=[task_upload_spotify_songs, task_upload_spotify_artists])
 
     # Create analytics tables
 
@@ -299,8 +299,7 @@ def music_etl():
     task_create_analytics_tables        = create_analytics_tables.submit(wait_for=[task_create_msd_tables, task_create_spotify_tables, task_create_mapped_tables])
 
 
-    for test in all_tests:
-        run_data_quality_tests.submit(test, wait_for=[task_create_analytics_tables])
+    run_data_quality_tests.submit(all_tests, wait_for=[task_create_analytics_tables])
 
 if __name__ == "__main__":
     music_etl()
