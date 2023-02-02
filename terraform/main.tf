@@ -16,7 +16,7 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias = "west"
+  alias      = "west"
   region     = "us-west-2"
   access_key = var.aws_secret_key_id
   secret_key = var.aws_secret_access_key
@@ -106,17 +106,18 @@ resource "aws_redshift_cluster" "music-dwh" {
 }
 
 resource "aws_s3_bucket" "music-etl-staging" {
-  provider = aws.west
- bucket = "music-etl-staging"
+  provider      = aws.west
+  bucket        = "music-etl-staging"
+  force_destroy = true
 
   tags = {
-    Name = "MusicETL"
+    Name        = "MusicETL"
     Environment = "Dev"
   }
 }
 
 resource "aws_s3_bucket_acl" "private-bucket" {
   provider = aws.west
-  bucket = aws_s3_bucket.music-etl-staging.id
-  acl    = "private"
+  bucket   = aws_s3_bucket.music-etl-staging.id
+  acl      = "private"
 }

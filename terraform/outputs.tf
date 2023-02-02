@@ -3,9 +3,9 @@ output "redshift_cluster_endpoint" {
 }
 
 output "s3_bucket_arn" {
-    value = aws_s3_bucket.music-etl-staging.arn
+  value = aws_s3_bucket.music-etl-staging.arn
 }
 
 output "iam_role_arn" {
-    value = aws_iam_role.dwh-user.arn
+  value = aws_iam_role.dwh-user.arn
 }
