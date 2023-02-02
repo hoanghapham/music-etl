@@ -1,16 +1,21 @@
 from pytest import fixture
 import vcr
 import os
-from dotenv import load_dotenv
 from src.spotify import ArtistFetcher, SongFetcher, SpotifyClient
 from src.msd.custom_types import MsdArtist, MsdSong
 from src.utils.custom_logger import init_logger
+from configparser import ConfigParser
+
 
 
 # Setup
+config = ConfigParser()
+config.read("config.cfg")
+
 my_vcr = vcr.VCR(filter_headers=['Authorization'])
 my_vcr.record_mode = 'new_episodes'
 fixture_base_path = 'tests/fixtures/vcr_cassettes/spotify'
+
 logger = init_logger(__file__)
 
 
@@ -20,7 +25,7 @@ logger = init_logger(__file__)
 def msd_song():
     return MsdSong(
         id='SOBBUGU12A8C13E95D',
-        title='Setting Fire to Sleeping Giants',
+        name='Setting Fire to Sleeping Giants',
         artist_id='ARMAC4T1187FB3FA4C',
         artist_name='The Dillinger Escape Plan'
     )
@@ -30,23 +35,22 @@ def msd_songs():
     return [
         MsdSong(
             id='SOBBUGU12A8C13E95D',
-            title='Setting Fire to Sleeping Giants',
+            name='Setting Fire to Sleeping Giants',
             artist_id='ARMAC4T1187FB3FA4C',
             artist_name='The Dillinger Escape Plan'
         ),
         MsdSong(
             id='SOOGFBZ12AC3DF7FF2',
-            title='In A Subtle Way',
+            name='In A Subtle Way',
             artist_id='ARDD1RC1187B9B52B4',
             artist_name='Jacob Young',
         )
     ]
 
 @fixture(scope='module')
-@my_vcr.use_cassette(f"{fixture_base_path}/SpotifyClient.yaml")
 def client():
-    client_id = os.environ.get('SPOTIFY_CLIENT_ID')
-    client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET') 
+    client_id       = config['SPOTIFY']['CLIENT_ID']
+    client_secret   = config['SPOTIFY']['CLIENT_SECRET']
     client = SpotifyClient(client_id, client_secret)
     return client
 
@@ -60,6 +64,7 @@ def song_fetcher(client):
 def SongFetcher_search_many(song_fetcher: SongFetcher, msd_songs):
     result = song_fetcher.search_many(msd_songs)
     return result
+
 
 
 class TestSongFetcher():
@@ -119,10 +124,12 @@ class TestArtistFetcher():
         result = ArtistFetcher_search_many
         assert len(result) > 0
 
+    @my_vcr.use_cassette(f"{fixture_base_path}/ArtistFetcher_fetch_one.yaml")
     def test_fetch_one(self, artist_fetcher: ArtistFetcher):
         result = artist_fetcher.fetch_one("3CsPxFJGyNa9ep79CFWN77")
         assert result is not None
 
+    @my_vcr.use_cassette(f"{fixture_base_path}/ArtistFetcher_fetch_many.yaml")
     def test_fetch_many(self, artist_fetcher: ArtistFetcher, ArtistFetcher_search_many):
         result = artist_fetcher.fetch_many(ArtistFetcher_search_many)
         assert len(result) > 0

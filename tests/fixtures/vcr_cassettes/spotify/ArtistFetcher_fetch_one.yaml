@@ -13,23 +13,17 @@ interactions:
       User-Agent:
       - python-requests/2.28.2
     method: GET
-    uri: https://api.spotify.com/v1/search?q=artist%3AThe+Box+Tops&type=artist&limit=10
+    uri: https://api.spotify.com/v1/artists?ids=3CsPxFJGyNa9ep79CFWN77
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAALRWYU/bMBD9zq+IIo0vdNRO7DSphCaGGNO6iYEYmjZNkxOfm0ASB8ehrRD/fW6a
-        lrSjLSD4eGfn3vO984vvdizLZkonpS5tq2/dmdhkYgViGtqx1kXZ73ZZkeyXhdSJmOxHMuve4m4J
-        TEXxh5sK1ORgVuKde3gRw95HOd67kEW5qycFNEu7UogS9AHaTZMs0QcY2Z0ZVqIhq7F/N+gmB2MN
-        Kmfp30qlLV71WkNjiZ4sIF/iNwPtuoOTs9v8VN78+Jy4g/Hg7Nsv/VPZTbH7zhxPyDSVI1CrWPM+
-        5FWadh7SWmqWTvOYOIj4/5UbQq6gOZMdVmGYwrDKrEIWdseyo5SVZRJZSkbX09iAXy+CzJCASQhM
-        29afRcGn6NGouO7Mi1oJrytt3ZaxIazoMmUCyTDW9dkRQq2eGKWWGBp+Ec8NuW5dqdujHia+51Dh
-        C+Ahhh52A49ETOAeBc4Dj1NEuG+3ao4SruM51qLLj9PxyHPYBJxTwBj5EFAXRA+cABEXYV8w5Jvu
-        hwEAJ97jbAzUFjLOs1rj4Yghx/cI5gY9Im7YI8QPwsgRvtMTDmYiQIbUo2ScJ3TmOTJFngg8BhQL
-        6DFCWcSpgyLk0DAMGHiu8ELmMLymMXMqrdnNWQY1pLEGy1iDNbWGhzkzl6JKmUp0faMpXSxMzaP+
-        bjbYD19UKqnzzfz3Z+v9TXe91ZpX8xZK+El5evp9cHXOquNR+OWKHOmr1/MWtNFWXuYNazivesPW
-        bS1vWCP0EShg6Va90Yvl3tT+t5DbuTk+G1WfLg/jYsTp+dfx4Mi/LF5PbvoGcq/hvCr31m2b5R4w
-        xeQ1WO+tp9zwlyu+SYGF4dj182L2z2gyuRmB5c7bs8dIi45dKLhNZFWubFzI45r4fuf+HwAAAP//
-        AwBX1rKoMAkAAA==
+        H4sIAAAAAAAAAJxTz2uDMBS+968Qz6Wa2prptdDBGGWwww5jjKjPGohJiHFtKf3fF2MUhLWj9aL5
+        XvL9eL6cZ57nE6VpoxvfS71P72wQg8FRg+KEfbeK2UqPm0ojhablqcP8SmvZpEEgJPCFKyxyUQc9
+        ZRBtmrfj9uX5tCMJSJxsth87jH1LdZn3SqVgTBxATVUqBWUH8Jax+QBqoQnrUBSiZRglE549cAUu
+        hJ8JBkr48+HLq+FIc8ItpJWQZmGYvtzZQW0MRCSd5PlBLlJzLZNjooXl+WdTTfYw6XfnAei+0h0Y
+        r8Ixsmn/xJixlRfceAosSUCyGMcoRqF5YA0ZLpMclVGIwyQChAnOIoAiz/yR8UALXTkZ18C/TETL
+        x0ysEV7dYcLI3DCB4sdMlAg/3WHCyPQmxoHgpAar9kq8d8GFMi/CNeGgyPAXpZAtI4pqexfitYP1
+        SfZH+4EZdreKWtRNVdpX0+s3xJiZXX4BAAD//wMApH+efKADAAA=
     headers:
       Alt-Svc:
       - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
@@ -49,7 +43,7 @@ interactions:
       access-control-max-age:
       - '604800'
       cache-control:
-      - public, max-age=7200
+      - public, max-age=76066
       content-encoding:
       - gzip
       content-type:
