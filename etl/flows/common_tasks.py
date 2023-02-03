@@ -47,18 +47,18 @@ def copy_s3_to_staging(redshift, create_table_query, table_name, source_path, lo
 
 
 @task 
-def search_spotify(redshift, spotify_fetcher, object_name, items_num=10, output_path="./", logger = None):
+def search_spotify(redshift, spotify_fetcher, object_name, limit_clause="limit 10", output_path="./", logger = None):
     logger.info(f"Searching for {object_name} on Spotify...")
 
     if object_name == 'songs':
-        songs = redshift.execute_query(search.songs.format(items_num))
+        songs = redshift.execute_query(search.songs.format(limit_clause))
         search_inputs = [
             MsdSong(id=song[0], name=song[1], artist_id=song[2], artist_name=song[3]) 
             for song in songs
         ]
     
     elif object_name == 'artists':
-        artists = redshift.execute_query(search.artists.format(items_num))
+        artists = redshift.execute_query(search.artists.format(limit_clause))
         search_inputs = [
             MsdArtist(id=artist[0], name=artist[1]) 
             for artist in artists

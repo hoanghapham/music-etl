@@ -11,8 +11,8 @@ class LoadingQueries:
     unload_redshift_to_s3 = ""
 
 class SearchInputQueries:
-    songs = "select id, name, artist_id, artist_name from staging.msd_songs limit {}"
-    artists = "select distinct id, name from staging.msd_artists limit {}"
+    songs = "select id, name, artist_id, artist_name from staging.msd_songs {limit_clause}"
+    artists = "select distinct id, name from staging.msd_artists {limit_clause}"
 
 class SchemaQueries:
 

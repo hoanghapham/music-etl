@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 from pathlib import Path
+from argparse import ArgumentParser
 
 from prefect import flow, get_run_logger
 from prefect.task_runners import SequentialTaskRunner
@@ -19,7 +20,7 @@ from flows import common_tasks as etl
         Load source msd data from S3, search for songs and artists in Spotify, and then combine in final analytics tables.
     """
     )
-def music_etl(limit=20):
+def music_etl(limit_clause="limit 10"):
 
     logger = get_run_logger()
 
@@ -79,10 +80,10 @@ def music_etl(limit=20):
 
 
     # Search MSD songs on spotify & create staging tables
-    mapped_songs        = etl.search_spotify.submit(redshift, songs_fetcher, 'songs', limit, f"{data_dir}/mapped/songs.json", 
+    mapped_songs        = etl.search_spotify.submit(redshift, songs_fetcher, 'songs', limit_clause, f"{data_dir}/mapped/songs.json", 
                                                 logger, wait_for = [stage_msd_songs])
     
-    mapped_artists      = etl.search_spotify.submit(redshift, artists_fetcher, 'artists', limit, f"{data_dir}/mapped/artists.json", 
+    mapped_artists      = etl.search_spotify.submit(redshift, artists_fetcher, 'artists', limit_clause, f"{data_dir}/mapped/artists.json", 
                                                 logger, wait_for = [stage_msd_artists])
 
 
@@ -128,4 +129,13 @@ def music_etl(limit=20):
     etl.run_data_quality_tests.submit(redshift, all_tests, logger, wait_for=[create_analytics_tables])
 
 if __name__ == "__main__":
-    music_etl(limit=20)
+
+    parser = ArgumentParser()
+    parser.add_argument('-m', '--mode', default='dev', choices=['dev', 'prod'], required=True)
+    args = parser.parse_args()
+
+    if args.mode == 'dev':
+        music_etl(limit_clause="limit 20")
+    
+    elif args.mode == 'prod':
+        music_etl(limit_clause="")
