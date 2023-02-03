@@ -38,7 +38,7 @@ class StagingMsdQueries:
     CREATE TABLE IF NOT EXISTS staging.msd_artists (
         id          VARCHAR(256) NOT NULL,
         name        VARCHAR(256),
-        location    VARCHAR(65535),
+        location    VARCHAR(MAX),
         longitude   NUMERIC,
         latitude    NUMERIC,
         tags        SUPER
@@ -69,8 +69,8 @@ class StagingMappedQueries:
 
     create_table_songs = """
     CREATE TABLE IF NOT EXISTS staging.mapped_songs (
-        msd_song_id VARCHAR(256),
-        spotify_song_ids SUPER
+        msd_song_id         VARCHAR(256),
+        spotify_song_ids    SUPER
     )
     DISTSTYLE KEY
     DISTKEY(msd_song_id)
@@ -78,8 +78,8 @@ class StagingMappedQueries:
 
     create_table_artists = """
     CREATE TABLE IF NOT EXISTS staging.mapped_artists (
-        msd_artist_id VARCHAR(256),
-        spotify_artist_ids SUPER
+        msd_artist_id       VARCHAR(256),
+        spotify_artist_ids  SUPER
     )
     DISTSTYLE KEY
     DISTKEY(msd_artist_id)
@@ -274,16 +274,16 @@ class AnalyticsQueries:
 
     SELECT 
         unnested.msd_song_id
-        , msd.name              as msd_song_name
-        , msd.release           as msd_release
-        , msd.artist_name       as msd_artist_name
+        , msd.name                      as msd_song_name
+        , msd.release                   as msd_release
+        , msd.artist_name               as msd_artist_name
         , msd.genre
-        , msd.year
+        , CASE WHEN msd.year = 0 THEN NULL ELSE msd.year END as year
         
         , unnested.spotify_song_id
-        , spotify.name          as spotify_song_name
-        , spotify.url           as spotify_url
-        , spotify.popularity    as spotify_popularity
+        , spotify.name                  as spotify_song_name
+        , spotify.url                   as spotify_url
+        , spotify.popularity            as spotify_popularity
         , spotify.duration_ms
         , spotify.album_id
 
@@ -315,6 +315,7 @@ class AnalyticsQueries:
         , spotify.url               as spotify_artist_url
         , spotify.total_followers   as spotify_total_followers
         , spotify.genres            as spotify_genres
+        , spotify.popularity        as spotify_popularity
 
     FROM unnested
     LEFT JOIN msd.artists AS msd ON unnested.msd_artist_id = msd.id

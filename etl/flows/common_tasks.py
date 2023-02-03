@@ -51,14 +51,14 @@ def search_spotify(redshift, spotify_fetcher, object_name, limit_clause="limit 1
     logger.info(f"Searching for {object_name} on Spotify...")
 
     if object_name == 'songs':
-        songs = redshift.execute_query(search.songs.format(limit_clause))
+        songs = redshift.execute_query(search.songs.format(limit_clause=limit_clause))
         search_inputs = [
             MsdSong(id=song[0], name=song[1], artist_id=song[2], artist_name=song[3]) 
             for song in songs
         ]
     
     elif object_name == 'artists':
-        artists = redshift.execute_query(search.artists.format(limit_clause))
+        artists = redshift.execute_query(search.artists.format(limit_clause=limit_clause))
         search_inputs = [
             MsdArtist(id=artist[0], name=artist[1]) 
             for artist in artists

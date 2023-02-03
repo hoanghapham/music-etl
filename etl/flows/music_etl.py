@@ -20,13 +20,18 @@ from flows import common_tasks as etl
         Load source msd data from S3, search for songs and artists in Spotify, and then combine in final analytics tables.
     """
     )
-def music_etl(limit_clause="limit 10"):
+def music_etl(mode: str = "dev"):
 
     logger = get_run_logger()
 
     p = Path(__file__).with_name('config.cfg')
     config = ConfigParser()
     config.read(p)
+
+    if mode == 'dev':
+        limit_clause = "limit 20"
+    elif mode == 'prod':
+        limit_clause = ""
 
     region_name         = config['S3']['REGION_NAME']
     data_dir            = config['DATA']['DATA_DIR']
@@ -134,8 +139,5 @@ if __name__ == "__main__":
     parser.add_argument('-m', '--mode', default='dev', choices=['dev', 'prod'], required=True)
     args = parser.parse_args()
 
-    if args.mode == 'dev':
-        music_etl(limit_clause="limit 20")
+    music_etl(mode=args.mode)
     
-    elif args.mode == 'prod':
-        music_etl(limit_clause="")

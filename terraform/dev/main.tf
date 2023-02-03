@@ -107,7 +107,7 @@ resource "aws_redshift_cluster" "music-dwh" {
 
 resource "aws_s3_bucket" "music-etl-staging" {
   provider      = aws.west
-  bucket        = "music-etl-staging"
+  bucket        = "music-etl-staging-${random_pet.name.id}"
   force_destroy = true
 
   tags = {
