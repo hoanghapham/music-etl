@@ -1,3 +1,5 @@
+"""Unit tests for spotify module"""
+
 import vcr
 from pathlib import Path
 from configparser import ConfigParser
@@ -62,7 +64,7 @@ def song_fetcher(client):
 
 @fixture
 @my_vcr.use_cassette(f"{fixture_base_path}/SongFetcher_search_many.yaml")
-def SongFetcher_search_many(song_fetcher: SongFetcher, msd_songs):
+def SongFetcher_search_many(song_fetcher: SongFetcher, msd_songs: list[MsdSong]):
     result = song_fetcher.search_many(msd_songs)
     return result
 
@@ -71,21 +73,26 @@ def SongFetcher_search_many(song_fetcher: SongFetcher, msd_songs):
 class TestSongFetcher():
 
     @my_vcr.use_cassette(f"{fixture_base_path}/SongFetcher_search_one.yml")
-    def test_search_one(self, song_fetcher: SongFetcher, msd_song):
+    def test_search_one(self, song_fetcher: SongFetcher, msd_song: MsdSong):
+        """Assert that search_one() will return data"""
         result = song_fetcher.search_one(msd_song)
         assert result is not None
 
     def test_search_many(self, SongFetcher_search_many):
+        """Assert that search_many() will return data"""
         result = SongFetcher_search_many
         assert len(result) > 0
 
     @my_vcr.use_cassette(f"{fixture_base_path}/SongFetcher_fetch_one.yml")
     def test_fetch_one(self, song_fetcher: SongFetcher):
+        """Assert that fetch_one() will return data of this song"""
         result = song_fetcher.fetch_one("2ZyNYdziwt0ZS9mxRiwnXM")
         assert result is not None
 
     @my_vcr.use_cassette(f"{fixture_base_path}/SongFetcher_fetch_many.yml")
     def test_fetch_many(self, song_fetcher: SongFetcher, SongFetcher_search_many):
+        """Assert that fetch_many() will iterate through the search inputs correctly'
+        and returns data"""
         result = song_fetcher.fetch_many(SongFetcher_search_many)
         assert len(result) > 0
 
@@ -118,19 +125,24 @@ class TestArtistFetcher():
 
     @my_vcr.use_cassette(f"{fixture_base_path}/ArtistFetcher_search_one.yaml")
     def test_search_one(self, artist_fetcher: ArtistFetcher, msd_artist):
+        """Assert that search_one() will return data"""
         result = artist_fetcher.search_one(msd_artist)
         assert result is not None
 
     def test_search_many(self, ArtistFetcher_search_many):
+        """Assert that search_many() will return data"""
         result = ArtistFetcher_search_many
         assert len(result) > 0
 
     @my_vcr.use_cassette(f"{fixture_base_path}/ArtistFetcher_fetch_one.yaml")
     def test_fetch_one(self, artist_fetcher: ArtistFetcher):
+        """Assert that fetch_one() will return data of this song"""
         result = artist_fetcher.fetch_one("3CsPxFJGyNa9ep79CFWN77")
         assert result is not None
 
     @my_vcr.use_cassette(f"{fixture_base_path}/ArtistFetcher_fetch_many.yaml")
     def test_fetch_many(self, artist_fetcher: ArtistFetcher, ArtistFetcher_search_many):
+        """Assert that fetch_many() will iterate through the search inputs correctly'
+        and returns data"""
         result = artist_fetcher.fetch_many(ArtistFetcher_search_many)
         assert len(result) > 0
