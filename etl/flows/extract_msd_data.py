@@ -1,20 +1,23 @@
 #%%
 import string
 from configparser import ConfigParser
+from pathlib import Path
 
-from src.aws.s3 import S3Client
 from src.msd import SongExtractor, ArtistExtractor
+from src.aws.s3 import S3Client
 from src.utils.custom_logger import init_logger
 
 # Set up
+p = Path(__file__).with_name('config.cfg')
 config = ConfigParser()
-config.read("./config.cfg")
+config.read(p)
 
 bucket = config['S3']['BUCKET']
-data_path = "/media/hapham/data/projects/data/MillionSongSubset"
-output_path = "data/msd"
+data_dir = config['DATA']['DATA_DIR']
+input_dir = config['DATA']['MSD_INPUT_DIR']
+output_dir = f"{data_dir}/msd/"
 
-logger = init_logger(__name__)
+logger = init_logger(Path(__file__).name)
 
 # Prepare client
 client = S3Client(
@@ -36,9 +39,9 @@ for char1 in string.ascii_uppercase:
         patterns.append(f"{char1}/{char2}")
 
 for pattern in patterns:
-    search_path         = f"{data_path}/{pattern}/**/*.h5"
-    songs_output_path   = f"{output_path}/songs/{pattern}.json"
-    artists_output_path = f"{output_path}/artists/{pattern}.json"
+    search_path         = f"{input_dir}/{pattern}/**/*.h5"
+    songs_output_dir   = f"{output_dir}/songs/{pattern}.json"
+    artists_output_dir = f"{output_dir}/artists/{pattern}.json"
     songs_remote_path   = f"msd/songs/{pattern}.json"
     artists_remote_path = f"msd/artists/{pattern}.json"
 
@@ -50,10 +53,8 @@ for pattern in patterns:
     if songs == []:
         continue
     else:
-        song_extractor.output_json(songs, songs_output_path)
-        client.upload_file(songs_output_path, bucket, songs_remote_path)
+        song_extractor.output_json(songs, songs_output_dir)
+        client.upload_file(songs_output_dir, bucket, songs_remote_path)
 
-        artists_extractor.output_json(artists, artists_output_path)
-        client.upload_file(artists_output_path, bucket, artists_remote_path)
-
-# %%
+        artists_extractor.output_json(artists, artists_output_dir)
+        client.upload_file(artists_output_dir, bucket, artists_remote_path)

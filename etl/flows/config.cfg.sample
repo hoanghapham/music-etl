@@ -1,0 +1,29 @@
+[DATA]
+DATA_DIR=~/music-etl/data
+MSD_INPUT_DIR= ~/data/MillionSongSubset
+
+[IAM]
+IAM_ROLE_ARN = 
+
+[S3]
+BUCKET = music-etl-staging
+BUCKET_ARN =
+REGION_NAME = us-west-2
+MSD_SONGS_PATH = s3://%(BUCKET)s/msd/songs/
+MSD_ARTISTS_PATH = s3://%(BUCKET)s/msd/artists/
+
+[REDSHIFT]
+HOST = 
+PORT = 
+DATABASE = 
+USERNAME = 
+PASSWORD = 
+
+[SPOTIFY]
+CLIENT_ID =
+CLIENT_SECRET =
+
+[AWS]
+AWS_ACCESS_KEY_ID =
+AWS_SECRET_ACCESS_KEY =
+AWS_SESSION_TOKEN =

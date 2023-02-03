@@ -1,16 +1,17 @@
-from pytest import fixture
 import vcr
-import os
+from pathlib import Path
+from configparser import ConfigParser
+from pytest import fixture
+
 from src.spotify import ArtistFetcher, SongFetcher, SpotifyClient
 from src.msd.custom_types import MsdArtist, MsdSong
 from src.utils.custom_logger import init_logger
-from configparser import ConfigParser
-
 
 
 # Setup
+p = Path(__file__).with_name('config.cfg')
 config = ConfigParser()
-config.read("config.cfg")
+config.read(p)
 
 my_vcr = vcr.VCR(filter_headers=['Authorization'])
 my_vcr.record_mode = 'new_episodes'

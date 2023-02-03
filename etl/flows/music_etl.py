@@ -1,15 +1,18 @@
 #%%
-from src.aws.redshift import RedshiftClient
-from src.aws.s3 import S3Client
 from configparser import ConfigParser
-from src import etl_queries as etl 
-
-from src.spotify import SpotifyClient, SongFetcher, ArtistFetcher
-from src.msd.custom_types import MsdSong, MsdArtist
-from src.data_quality import DataQualityOperator, all_tests
+from pathlib import Path
 
 from prefect import task, flow, get_run_logger
 from prefect.task_runners import ConcurrentTaskRunner, SequentialTaskRunner
+
+from src import etl_queries as etl 
+from src.spotify import SpotifyClient, SongFetcher, ArtistFetcher
+from src.msd.custom_types import MsdSong, MsdArtist
+from src.aws.redshift import RedshiftClient
+from src.aws.s3 import S3Client
+from src.data_quality import DataQualityOperator, all_tests
+
+
 
 @flow(
     task_runner=SequentialTaskRunner(),
@@ -22,8 +25,9 @@ def music_etl():
 
     logger = get_run_logger()
 
+    p = Path(__file__).with_name('config.cfg')
     config = ConfigParser()
-    config.read('./config.cfg')
+    config.read(p)
 
     bucket              = config['S3']['BUCKET']
     msd_songs_path      = config['S3']['MSD_SONGS_PATH']
@@ -262,7 +266,7 @@ def music_etl():
     @task
     def run_data_quality_tests(test):
         data_quality = DataQualityOperator(client=redshift, logger=logger)
-        data_quality.run_test(test)
+        data_quality.run_multi_tests(test)
 
 
 

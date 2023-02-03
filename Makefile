@@ -13,35 +13,35 @@ install-pyenv:
 	pyenv install -f 3.10.7
 
 
-prepare-dev-env:
-	pyenv virtualenv 3.10.7 dev
-	pyenv local dev
-	pyenv activate dev
-	pip install -r requirements.txt
-	pip install -e .
-	cd terraform/dev/ && terraform apply -auto-approve && cd ../../ || cd ../../
+setup-dev-infra:
+	cd terraform/dev/ && terraform apply -var-file="secrets.tfvars" -auto-approve && cd ../../ || cd ../../
 
+
+setup-virtualenv:
+	pyenv virtualenv -f 3.10.7 dev 
+	pyenv local dev
+
+setup-dev-env:
+	pip install -r etl/requirements.txt
+	pip install -e etl/
 
 download-msd-subset:
-	python3 dev/flow/down.py
+	python3 etl/flows/download_msd_subset.py
+
+extract-msd-data:
+	python3 etl/flows/extract_msd_data.py
+
+run-etl:
+	python3 etl/flows/music_etl.py
 
 destroy-dev-env:
 	cd terraform/ && terraform destroy -auto-approve && cd ../../ || cd ../../
-
-
-run-dev-flow:
-	python3 dev/flows/music_etl.py
-
-
 
 prepare-prod-env:
 	# terraform commands, pip install...
 
 list-active-resources:
 	# terraform output
-
-run-etl:
-	# Prefect / python command
 
 install-aws-cli:
 	mkdir -p tmp

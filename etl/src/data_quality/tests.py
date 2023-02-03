@@ -12,7 +12,7 @@ def unique_query(table, column):
     return f"select {column}, count(*) as cnt from {table} group by 1 having cnt > 1"
 
 def not_null_query(table, column):
-    return f"select count(*) as cnt from {table} where {column} is null"
+    return f"select count(case when {column} is null then 1 else null end) as cnt from {table} having cnt > 1"
 
 
 all_tests = [
@@ -44,5 +44,4 @@ all_tests = [
     Test(name='spotify_artists_id_unique', query = unique_query('spotify.artists', 'id'), expected_result = 0),
     Test(name='analytics_spotify_songs_id_unique', query = unique_query('analytics.songs', 'spotify_song_id'), expected_result = 0),
     Test(name='analytics_spotify_songs_id_not_null', query = not_null_query('analytics.songs', 'spotify_song_id'), expected_result = 0),
-
 ]
