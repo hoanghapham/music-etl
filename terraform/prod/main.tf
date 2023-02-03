@@ -17,7 +17,7 @@ provider "aws" {
 
 provider "aws" {
   alias      = "west"
-  region     = "us-east-1"
+  region     = "us-west-2"
   access_key = var.aws_secret_key_id
   secret_key = var.aws_secret_access_key
   token      = var.aws_session_token
@@ -106,34 +106,46 @@ resource "aws_redshift_cluster" "music-dwh" {
 }
 
 resource "aws_s3_bucket" "music-etl-staging" {
-  provider      = aws.west
-  bucket        = "music-etl-staging"
+  provider = aws.west
+  bucket        = "music-etl-stg-${random_pet.name.id}"
   force_destroy = true
 
   tags = {
-    Name        = "MusicETL"
-    Environment = "Dev"
+    Name        = "music-etl-stg-${random_pet.name.id}"
+    Environment = "prod"
   }
-}
-
-resource "aws_s3_bucket_acl" "private-bucket" {
-  provider = aws.west
-  bucket   = aws_s3_bucket.music-etl-staging.id
-  acl      = "private"
 }
 
 # EC2
 
-resource "aws_instance" "music-etl" {
 
-}
-
-resource "aws_ebs_volume" "million-song-dataset" {
-
+resource "aws_ebs_volume" "msd" {
+  availability_zone = "us-east-1a"
+  size              = 500
+  snapshot_id       = "snap-5178cf30"
+  tags = {
+    Name = "million-songs-dataset"
+  }
 }
 
 resource "aws_volume_attachment" "msd-att" {
+  device_name = "/dev/xvdf"
+  volume_id   = aws_ebs_volume.msd.id
+  instance_id = aws_instance.music-etl.id
+}
 
+resource "aws_instance" "music-etl" {
+  ami               = "ami-00874d747dde814fa"
+  instance_type     = "t2.micro"
+  availability_zone = "us-east-1a"
+
+  user_data = file("init-script.sh")
+
+  key_name = "music-etl"
+
+  tags = {
+    Name = "music-etl"
+  }
 }
 
 # EBS
