@@ -1,19 +1,20 @@
+# Data Dictionary
 
-- [msd schema](#msd-schema)
+- [msd](#msd)
   - [msd.artists](#msdartists)
   - [msd.songs](#msdsongs)
-- [mapped schema](#mapped-schema)
+- [mapped](#mapped)
   - [mapped.songs](#mappedsongs)
   - [mapped.artists](#mappedartists)
   - [spotify.songs](#spotifysongs)
-- [spotify schema](#spotify-schema)
+- [spotify](#spotify)
   - [spotify.artists](#spotifyartists)
-- [analytics schema](#analytics-schema)
+- [analytics](#analytics)
   - [analytics.artists](#analyticsartists)
   - [analytics.songs](#analyticssongs)
 
 
-## msd schema
+## msd
 
 ### msd.artists
 This table contains information about artists extracted from the Million Song Dataset.
@@ -41,7 +42,7 @@ This table contains information about songs extracted from the Million Song Data
 | artist_name | VARCHAR(256)          | Name of the artist. One song in MSD can have multiple artists in one line, and together they can form one single "artist" |
 | year        | INTEGER               | The year the song was released. 0 of not available.                                                                       |
 
-## mapped schema
+## mapped
 ### mapped.songs
 
 This table is used to map between MSD and Spotify songs.
@@ -58,10 +59,10 @@ This table is used to map between MSD and Spotify artists.
 | Field              | Data Type    | Description                                                                   |
 | ------------------ | ------------ | ----------------------------------------------------------------------------- |
 | msd_artist_id      | VARCHAR(256) | ID of the artist extracted from MSD                                           |
-| spotify_artist_ids | SUPER        | IDs of the Spotify artists matched with this artist via the search endpoint |
+| spotify_artist_ids | SUPER        | IDs of the Spotify artists matched with this artist via the search endpoint    |
 
 
-## spotify schema
+## spotify
 
 ### spotify.songs
 This table contains detailed songs info fetched from Spotify
@@ -88,7 +89,7 @@ This table contains detailed songs info fetched from Spotify
 | popularity      | NUMERIC      | Popularity metric is calculated by Spotify                     |
 | genres          | SUPER        | List of tags that represent the genres this artist performs in |
 
-## analytics schema
+## analytics
 ### analytics.artists
 
 This table contains combined artists information from both MSD and Spotify
@@ -124,4 +125,4 @@ This table contains combined artists information from both MSD and Spotify
 | spotify_url        | VARCHAR(MAX) |
 | spotify_popularity | NUMERIC      |
 | duration_ms        | INTEGER      |
-| album_id           |              |
+| album_id           | VARCHAR(256) |
