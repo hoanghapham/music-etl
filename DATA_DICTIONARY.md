@@ -1,5 +1,12 @@
 # Data Dictionary
 
+## Data model
+
+![](./images/music-etl.png)
+
+
+## Table descriptions
+
 - [msd](#msd)
   - [msd.artists](#msdartists)
   - [msd.songs](#msdsongs)

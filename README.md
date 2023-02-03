@@ -32,7 +32,7 @@ With this project, I aim to combine the real Million Song Dataset with data comi
 ## Installation
 Please refer to the [Set Up Guide](./SETUP.md).
 
-## Data Dictionary
+## Data Model & Dictionary
 Please refer to the [Data Dictionary](./DATA_DICTIONARY.md) file.
 
 # Additional questions
