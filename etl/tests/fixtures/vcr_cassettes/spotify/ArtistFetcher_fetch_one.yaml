@@ -1,0 +1,64 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.28.2
+    method: GET
+    uri: https://api.spotify.com/v1/artists?ids=3CsPxFJGyNa9ep79CFWN77
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAJxTz2uDMBS+968Qz6Wa2prptdDBGGWwww5jjKjPGohJiHFtKf3fF2MUhLWj9aL5
+        XvL9eL6cZ57nE6VpoxvfS71P72wQg8FRg+KEfbeK2UqPm0ojhablqcP8SmvZpEEgJPCFKyxyUQc9
+        ZRBtmrfj9uX5tCMJSJxsth87jH1LdZn3SqVgTBxATVUqBWUH8Jax+QBqoQnrUBSiZRglE549cAUu
+        hJ8JBkr48+HLq+FIc8ItpJWQZmGYvtzZQW0MRCSd5PlBLlJzLZNjooXl+WdTTfYw6XfnAei+0h0Y
+        r8Ixsmn/xJixlRfceAosSUCyGMcoRqF5YA0ZLpMclVGIwyQChAnOIoAiz/yR8UALXTkZ18C/TETL
+        x0ysEV7dYcLI3DCB4sdMlAg/3WHCyPQmxoHgpAar9kq8d8GFMi/CNeGgyPAXpZAtI4pqexfitYP1
+        SfZH+4EZdreKWtRNVdpX0+s3xJiZXX4BAAD//wMApH+efKADAAA=
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Transfer-Encoding:
+      - chunked
+      Via:
+      - HTTP/2 edgeproxy, 1.1 google
+      access-control-allow-credentials:
+      - 'true'
+      access-control-allow-headers:
+      - Accept, App-Platform, Authorization, Content-Type, Origin, Retry-After, Spotify-App-Version,
+        X-Cloud-Trace-Context, client-token, content-access-token
+      access-control-allow-methods:
+      - GET, POST, OPTIONS, PUT, DELETE, PATCH
+      access-control-allow-origin:
+      - '*'
+      access-control-max-age:
+      - '604800'
+      cache-control:
+      - public, max-age=76066
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json; charset=utf-8
+      date:
+      - Thu, 02 Feb 2023 10:41:45 GMT
+      server:
+      - envoy
+      strict-transport-security:
+      - max-age=31536000
+      x-content-type-options:
+      - nosniff
+      x-robots-tag:
+      - noindex, nofollow
+    status:
+      code: 200
+      message: OK
+version: 1

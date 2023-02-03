@@ -1,0 +1,33 @@
+[DATA]
+DATA_DIR        = ~/music-etl/data
+MSD_INPUT_DIR   = ~/data/MillionSongSubset
+
+
+[S3]
+BUCKET              = 
+REGION_NAME         = us-west-2
+S3_MSD_SONGS        = s3://%(BUCKET)s/msd/songs/
+S3_MSD_ARTISTS      = s3://%(BUCKET)s/msd/artists/
+S3_SPOTIFY_SONGS    = s3://%(BUCKET)s/spotify/songs.json
+S3_SPOTIFY_ARTISTS  = s3://%(BUCKET)s/spotify/artists.json
+S3_MAPPED_SONGS     = s3://%(BUCKET)s/mapped/songs.json
+S3_MAPPED_ARTISTS   = s3://%(BUCKET)s/mapped/artists.json
+
+[IAM]
+IAM_ROLE_ARN = 
+
+[REDSHIFT]
+HOST = 
+PORT = 5439
+DATABASE = dev
+USERNAME = dwh
+PASSWORD = 
+
+[SPOTIFY]
+CLIENT_ID =
+CLIENT_SECRET =
+
+[AWS]
+AWS_ACCESS_KEY_ID =
+AWS_SECRET_ACCESS_KEY =
+AWS_SESSION_TOKEN =

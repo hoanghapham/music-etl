@@ -1,2 +1,0 @@
-spotipy==2.22.1
-tables==3.8.0

@@ -1,7 +1,12 @@
 .python-version
 .env
 .cache
+*.egg*
 
-data/*
-__pycache__/*
+**/data/*
+**/tmp/*
+**/__pycache__/*
 workpad/*
+
+config.cfg
+**/credentials/*
