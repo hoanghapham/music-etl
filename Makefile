@@ -1,12 +1,17 @@
 help:
 	@echo "Available make commands:"
-	@echo "  Command: desc"
-	@echo "  Command: desc"
-	@echo "  Command: desc"
-	@echo "  Command: desc"
-	@echo "  Command: desc"
-	@echo "  Command: desc"
-	@echo "  Command: desc"
+
+	@echo "      install-pyenv       : Shortcut to install pyenv"
+	@echo "      setup-virtualenv    : Shortcut to setup a virtualenv"
+	@echo "      setup-env           : Install required packages, and install current project as a local package"
+	@echo "      download-msd-       : Shortcut to download the MSD subset"
+	@echo "      extract-msd-dev     : Extract the MSD data in dev mode"
+	@echo "      extract-msd-prod    : Extract the MSD data in prod mode (Go through all folders)"
+	@echo "      run-etl-dev         : Run the ETL script in dev mode (Process only a few songs)"
+	@echo "      run-etl-prod        : Run the ETL script in prod mode (Process all 1 million songs)"
+	@echo "      install-aws-cli     : Short cut to install AWS CLI"
+	@echo "      install-terraform   : Short cut to install Terraform"
+
 
 install-pyenv:
 	curl https://pyenv.run | bash
@@ -16,37 +21,30 @@ install-pyenv:
 
 # Dev
 setup-virtualenv:
-	pyenv install -f 3.10.7
-	pyenv virtualenv -f 3.10.7 dev 
+	pyenv virtualenv dev 
 	pyenv local dev
 
-setup-dev-infra:
-	cd terraform/dev/ && terraform apply -var-file=secrets.tfvars -auto-approve && cd ../../ || cd ../../
-
-
-setup-dev-env:
-	pip install -r etl/requirements.txt
-	pip install -e etl/
+setup-env:
+	pip3 install -r etl/requirements.txt
+	pip3 install -e etl/
 
 download-msd-subset:
 	python3 etl/flows/download_msd_subset.py
 
-extract-msd-data:
-	python3 etl/flows/extract_msd_data.py
+extract-msd-dev:
+	python3 etl/flows/extract_msd_data.py -m dev
 
-run-etl:
-	python3 etl/flows/music_etl.py
+run-etl-dev:
+	python3 etl/flows/music_etl.py -m dev
+
+extract-msd-prod:
+	python3 etl/flows/extract_msd_data.py -m prod
+
+run-etl-prod:
+	python3 etl/flows/music_etl.py -m prod
 
 destroy-dev-infra:
-	cd terraform/dev/ && terraform destroy -var-file=secrets.tfvars -auto-approve && cd ../../ || cd ../../
-
-
-# Production
-setup-prod-infra:
-	cd terraform/prod/ && terraform init && terraform apply -var-file=secrets.tfvars -auto-approve && cd ../../ || cd ../../
-
-list-active-resources:
-	# terraform output
+	cd terraform/dev && terraform destroy -var-file secrets.tfvars -auto-approve && cd ../../	
 
 install-aws-cli:
 	mkdir -p tmp

@@ -1,1 +1,0 @@
-mds artists can contain multiple artists in one entry
