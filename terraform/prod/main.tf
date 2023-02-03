@@ -106,7 +106,7 @@ resource "aws_redshift_cluster" "music-dwh" {
 }
 
 resource "aws_s3_bucket" "music-etl-staging" {
-  provider = aws.west
+  provider      = aws.west
   bucket        = "music-etl-stg-${random_pet.name.id}"
   force_destroy = true
 
@@ -117,7 +117,6 @@ resource "aws_s3_bucket" "music-etl-staging" {
 }
 
 # EC2
-
 
 resource "aws_ebs_volume" "msd" {
   availability_zone = "us-east-1a"
@@ -141,11 +140,8 @@ resource "aws_instance" "music-etl" {
 
   user_data = file("init-script.sh")
 
-  key_name = "music-etl"
-
   tags = {
     Name = "music-etl"
   }
 }
 
-# EBS
