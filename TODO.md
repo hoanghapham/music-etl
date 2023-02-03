@@ -11,3 +11,4 @@
 
 ## Project structure
 - Better parameterize the tasks
+- Implement a MSD - Spotify search filter, to filter out irrelevant search results
