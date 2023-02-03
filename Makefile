@@ -43,6 +43,15 @@ extract-msd-prod:
 run-etl-prod:
 	python3 etl/flows/music_etl.py -m prod
 
+init-terraform-dev:
+	cd terraform/dev && terraform init && cd ../../	
+
+setup-dev-infra:
+	cd terraform/dev && terraform apply -var-file secrets.tfvars -auto-approve && cd ../../	
+
+list-dev-infra:
+	cd terraform/dev && terraform output && cd ../../	
+
 destroy-dev-infra:
 	cd terraform/dev && terraform destroy -var-file secrets.tfvars -auto-approve && cd ../../	
 
