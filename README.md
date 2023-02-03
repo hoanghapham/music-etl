@@ -39,7 +39,10 @@ Please refer to the [Data Dictionary](./DATA_DICTIONARY.md) file.
 
 ## What if the data was increased by 100x?
 
-Currently the pipeline is built purely on Python, and use the SequentialTaskRunner of Prefect. For larger data volume, we may need to build some parts of the ETL in Spark (for example, the staging & analytics transformation steps), or switch to the ConcurrentTaskRunner of Prefect, and run the flow in a stronger EC2 instance.
+Currently the pipeline is built purely on Python, and use the SequentialTaskRunner of Prefect. For larger data volume, we may need to add some other elements to the pipeline, depending on the use cases. For example:
+- Consider storing more data in one big file instead of separating into multiple small files.
+- Consider other format to store the source files before bringing them into Redshift (for example, Parquet). May be create external tables to read directly from S3-stored Parquet files instead of loading to Redshift?
+- Introduce parallelism: build some parts of the ETL in Spark (for example, the staging & analytics transformation steps), or switch to the ConcurrentTaskRunner of Prefect, and run the flow in a stronger EC2 instance.
 
 ## What if the pipeline need to be run daily at 7am?
 
@@ -47,7 +50,10 @@ We will need to create a Prefect deployment that is scheduled to run daily at 7a
 
 ## If the database needed to be accessed by 100+ people?
 
-In this case, we will need to pay extra attention to the query pattern of the users and create tables with correct distribution types to optimize the query performance, especially for JOIN operations. 
+In this case, we will need to pay extra attention to the query pattern of the users and create tables with correct distribution types to optimize the query performance, especially for JOIN operations. For example:
+- For fact / event tables, most likely users will want to filter by time columns, so we can choose time fields as sort keys
+- For dimension tables like songs or atists, people may want to query by certain dimensions like genre, available markets etc... so it may be a good idea to check which dimension has even data distribution and use them as DISTKEY
+
 
 
 # Shortcuts to run the pipeline
