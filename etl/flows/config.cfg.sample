@@ -1,14 +1,11 @@
 [DATA]
-DATA_DIR=~/music-etl/data
-MSD_INPUT_DIR= ~/data/MillionSongSubset
+DATA_DIR        = ~/music-etl/data
+MSD_INPUT_DIR   = ~/data/MillionSongSubset
 
-[IAM]
-IAM_ROLE_ARN = 
 
 [S3]
-BUCKET = music-etl-staging
-BUCKET_ARN =
-REGION_NAME = us-west-2
+BUCKET              = 
+REGION_NAME         = us-west-2
 S3_MSD_SONGS        = s3://%(BUCKET)s/msd/songs/
 S3_MSD_ARTISTS      = s3://%(BUCKET)s/msd/artists/
 S3_SPOTIFY_SONGS    = s3://%(BUCKET)s/spotify/songs.json
@@ -16,11 +13,14 @@ S3_SPOTIFY_ARTISTS  = s3://%(BUCKET)s/spotify/artists.json
 S3_MAPPED_SONGS     = s3://%(BUCKET)s/mapped/songs.json
 S3_MAPPED_ARTISTS   = s3://%(BUCKET)s/mapped/artists.json
 
+[IAM]
+IAM_ROLE_ARN = 
+
 [REDSHIFT]
 HOST = 
-PORT = 
-DATABASE = 
-USERNAME = 
+PORT = 5439
+DATABASE = dev
+USERNAME = dwh
 PASSWORD = 
 
 [SPOTIFY]
