@@ -9,8 +9,12 @@ IAM_ROLE_ARN =
 BUCKET = music-etl-staging
 BUCKET_ARN =
 REGION_NAME = us-west-2
-MSD_SONGS_PATH = s3://%(BUCKET)s/msd/songs/
-MSD_ARTISTS_PATH = s3://%(BUCKET)s/msd/artists/
+S3_MSD_SONGS        = s3://%(BUCKET)s/msd/songs/
+S3_MSD_ARTISTS      = s3://%(BUCKET)s/msd/artists/
+S3_SPOTIFY_SONGS    = s3://%(BUCKET)s/spotify/songs.json
+S3_SPOTIFY_ARTISTS  = s3://%(BUCKET)s/spotify/artists.json
+S3_MAPPED_SONGS     = s3://%(BUCKET)s/mapped/songs.json
+S3_MAPPED_ARTISTS   = s3://%(BUCKET)s/mapped/artists.json
 
 [REDSHIFT]
 HOST = 

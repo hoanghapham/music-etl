@@ -19,7 +19,6 @@ class FileOperator():
         
         try:
             subprocess.run(["tar", "-zxf", input_file_path, "-C", output_folder])
-            self.logger.info(f"Extracted file successfully")
         except Exception as e:
             self.logger.error("Extracting failed.")
             self.logger.error(e)

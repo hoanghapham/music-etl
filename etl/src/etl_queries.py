@@ -38,7 +38,7 @@ class StagingMsdQueries:
     CREATE TABLE IF NOT EXISTS staging.msd_artists (
         id          VARCHAR(256) NOT NULL,
         name        VARCHAR(256),
-        location    VARCHAR(256),
+        location    VARCHAR(65535),
         longitude   NUMERIC,
         latitude    NUMERIC,
         tags        SUPER
