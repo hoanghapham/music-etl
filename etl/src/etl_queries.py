@@ -10,6 +10,9 @@ class LoadingQueries:
 
     unload_redshift_to_s3 = ""
 
+class SearchInputQueries:
+    songs = "select id, name, artist_id, artist_name from staging.msd_songs limit {}"
+    artists = "select distinct id, name from staging.msd_artists limit {}"
 
 class SchemaQueries:
 
@@ -61,10 +64,10 @@ class StagingMsdQueries:
 
 class StagingMappedQueries:
     
-    drop_table_mapped_songs     = "DROP TABLE IF EXISTS staging.mapped_songs"
-    drop_table_mapped_artists   = "DROP TABLE IF EXISTS staging.mapped_artists"
+    drop_table_songs     = "DROP TABLE IF EXISTS staging.mapped_songs"
+    drop_table_artists   = "DROP TABLE IF EXISTS staging.mapped_artists"
 
-    create_table_mapped_songs = """
+    create_table_songs = """
     CREATE TABLE IF NOT EXISTS staging.mapped_songs (
         msd_song_id VARCHAR(256),
         spotify_song_ids SUPER
@@ -73,7 +76,7 @@ class StagingMappedQueries:
     DISTKEY(msd_song_id)
     """
 
-    create_table_mapped_artists = """
+    create_table_artists = """
     CREATE TABLE IF NOT EXISTS staging.mapped_artists (
         msd_artist_id VARCHAR(256),
         spotify_artist_ids SUPER
