@@ -9,10 +9,10 @@ import pytz
 
 from src.utils.custom_logger import init_logger
 from src.utils.helper import iter_execute, write_json
-from src.integration.custom_types import IngegratedSongMetadata, IntegratedArtistMetadata
+from src.mapping.custom_types import IngegratedSongMetadata, IntegratedArtistMetadata
 from src.msd.custom_types import MsdArtist, MsdSong
 from src.spotify.custom_types import SpotifySong, SpotifyArtist
-from src.integration.custom_types import MappedSong, MappedArtist
+from src.mapping.custom_types import MappedSong, MappedArtist
 
 
 class SpotifyClient:

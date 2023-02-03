@@ -8,3 +8,4 @@ botocore==1.29.59
 python-dotenv==0.21.1
 redshift-connector==2.0.910
 prefect==2.7.10
+pyOpenSSL==23.0.0

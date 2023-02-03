@@ -19,10 +19,15 @@ With this project, I aim to combine the real Million Song Dataset with data comi
     - Personal computer: for development purpose, it is sufficient to run everything in a personal machine.
 - Terraform: for easy infrastructure set up.
 
-[Architecture diagram here]
+![](./images/dev.png)
 
 ### ETL flow
-- Data update schedule
+- At the moment, the flow is configured to run for one time only. 
+- In case we want to regularly update the songs & artists list, instead of using the Million Song Dataset, we can figure out a way to get updated songs & artists list on Spotify.
+- Overview of the workflow:
+
+    ![](./images/flow.png)
+    
 
 ## Installation
 Please refer to the [Installation guide](./INSTALL.md)
@@ -33,17 +38,23 @@ Please refer to the [Data Dictionary](./DATA_DICTIONARY.md) file.
 
 ## How to get data
 ### Access the full Million Song Dataset
-The official guide to access the full dataset is [here](http://millionsongdataset.com/pages/getting-dataset/). 
+The official guide to access the full dataset is [here](ht://millionsongdataset.com/pages/getting-dataset/). 
 The terraform scripts provided in this repo will automatically give you access to the dataset via EC2.
 
 ### Get a subset of MSD
 The subset can be downloaded from [this link](http://labrosa.ee.columbia.edu/~dpwe/tmp/millionsongsubset.tar.gz). 
-After downloading, extract the content to the `data/msd/` path
+You can run the scrip at `./flows/download_msd_subset` to download & extract it. The output folder is configured in the `./flows/config.cfg` file. 
 
+### Configuration
+The `./flows/config.cfg.sample` file provides an example of how you can supply the variables required for the flow to run
 
-
+## Credentials
 ### Obtain Spotify API Credentials
+Simply go to https://developer.spotify.com/dashboard/applications, create an app, and obtain the client ID and client Secret.
 
+### Optain the AWS Secrets
+
+Log into the AWS console,go to **Identity and Access Management (IAM)**, create a new user, grant the 
 
 # How to approach the problem when:
 

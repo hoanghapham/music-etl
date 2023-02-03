@@ -10,16 +10,19 @@ help:
 
 install-pyenv:
 	curl https://pyenv.run | bash
-	pyenv install -f 3.10.7
+	sudo apt update; sudo apt install build-essential libssl-dev zlib1g-dev \
+	libbz2-dev libreadline-dev libsqlite3-dev curl \
+	libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 
 # Dev
+setup-virtualenv:
+	pyenv install -f 3.10.7
+	pyenv virtualenv -f 3.10.7 dev 
+	pyenv local dev
+
 setup-dev-infra:
 	cd terraform/dev/ && terraform apply -var-file=secrets.tfvars -auto-approve && cd ../../ || cd ../../
 
-
-setup-virtualenv:
-	pyenv virtualenv -f 3.10.7 dev 
-	pyenv local dev
 
 setup-dev-env:
 	pip install -r etl/requirements.txt

@@ -19,7 +19,7 @@ from flows import common_tasks as etl
         Load source msd data from S3, search for songs and artists in Spotify, and then combine in final analytics tables.
     """
     )
-def music_etl():
+def music_etl(limit=20):
 
     logger = get_run_logger()
 
@@ -79,10 +79,10 @@ def music_etl():
 
 
     # Search MSD songs on spotify & create staging tables
-    mapped_songs        = etl.search_spotify.submit(redshift, songs_fetcher, 'songs', 20, f"{data_dir}/mapped/songs.json", 
+    mapped_songs        = etl.search_spotify.submit(redshift, songs_fetcher, 'songs', limit, f"{data_dir}/mapped/songs.json", 
                                                 logger, wait_for = [stage_msd_songs])
     
-    mapped_artists      = etl.search_spotify.submit(redshift, artists_fetcher, 'artists', 20, f"{data_dir}/mapped/artists.json", 
+    mapped_artists      = etl.search_spotify.submit(redshift, artists_fetcher, 'artists', limit, f"{data_dir}/mapped/artists.json", 
                                                 logger, wait_for = [stage_msd_artists])
 
 
@@ -128,4 +128,4 @@ def music_etl():
     etl.run_data_quality_tests.submit(redshift, all_tests, logger, wait_for=[create_analytics_tables])
 
 if __name__ == "__main__":
-    music_etl()
+    music_etl(limit=20)
