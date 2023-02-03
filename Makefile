@@ -12,9 +12,9 @@ install-pyenv:
 	curl https://pyenv.run | bash
 	pyenv install -f 3.10.7
 
-
+# Dev
 setup-dev-infra:
-	cd terraform/dev/ && terraform apply -var-file="secrets.tfvars" -auto-approve && cd ../../ || cd ../../
+	cd terraform/dev/ && terraform apply -var-file=secrets.tfvars -auto-approve && cd ../../ || cd ../../
 
 
 setup-virtualenv:
@@ -34,11 +34,13 @@ extract-msd-data:
 run-etl:
 	python3 etl/flows/music_etl.py
 
-destroy-dev-env:
-	cd terraform/ && terraform destroy -auto-approve && cd ../../ || cd ../../
+destroy-dev-infra:
+	cd terraform/dev/ && terraform destroy -var-file=secrets.tfvars -auto-approve && cd ../../ || cd ../../
 
-prepare-prod-env:
-	# terraform commands, pip install...
+
+# Production
+setup-prod-infra:
+	cd terraform/prod/ && terraform init && terraform apply -var-file=secrets.tfvars -auto-approve && cd ../../ || cd ../../
 
 list-active-resources:
 	# terraform output
