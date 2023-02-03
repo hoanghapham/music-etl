@@ -1,3 +1,5 @@
+"""Unit tests for msd module"""
+
 from pytest import fixture
 from src.msd import SongExtractor, ArtistExtractor
 from src.msd.custom_types import MsdSong, MsdArtist
@@ -18,6 +20,8 @@ base_path = "tests/fixtures/msd"
 class TestSongExtractor():
 
     def test_extract_one_file(self, song_extractor: SongExtractor):
+        """Assert that SongExtractor.extract_one_file()'s JSON output is correct"""
+
         song_01 = song_extractor.extract_one_file(f"{base_path}/input/song_01.h5")[0]
 
         with open(f"{base_path}/output/song_01.json", 'r') as f:
@@ -26,7 +30,10 @@ class TestSongExtractor():
         output_song_01 = MsdSong(**data)
         assert song_01 == output_song_01
 
+
     def test_extract_many_files(self, song_extractor: SongExtractor):
+        """Assert that SongExtractor.extract_many_files()'s all JSON outputs are correct"""
+
         songs = song_extractor.extract_many_files(f"{base_path}/input/*.h5")
 
         with open(f"{base_path}/output/songs.json", 'r') as f:
@@ -38,6 +45,8 @@ class TestSongExtractor():
 
 class TestArtistExtractor():
     def test_extract_one_file(self, artist_extractor: ArtistExtractor):
+        """Assert that ArtistExtractor.extract_one_file()'s JSON output is correct"""
+
         artist_01 = artist_extractor.extract_one_file(f"{base_path}/input/song_01.h5")[0]
 
         with open(f"{base_path}/output/artist_01.json", 'r') as f:
@@ -47,6 +56,8 @@ class TestArtistExtractor():
         assert artist_01 == output_artist_01
 
     def test_extract_many_files(self, artist_extractor: ArtistExtractor):
+        """Assert that ArtistExtractor.extract_many_files()'s all JSON outputs are correct"""
+
         artists = artist_extractor.extract_many_files(f"{base_path}/input/*.h5")
 
         with open(f"{base_path}/output/artists.json", 'r') as f:

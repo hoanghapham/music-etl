@@ -4,12 +4,25 @@ from src.utils.custom_logger import init_logger
 from src.data_quality.tests import Test
 
 class DataQualityOperator:
+    """Class to run data tests"""
 
     def __init__(self, client: RedshiftClient, logger: Logger = None):
         self.logger = logger or init_logger(self.__class__.__name__)
         self.client = client
 
-    def run_test(self, test: Test):
+    def run_test(self, test: Test) -> bool:
+        """Run a single test.
+
+        Parameters
+        ----------
+        test : Test
+            Test object coming from the `tests` module
+
+        Returns
+        -------
+        bool
+            Return True if the test passes, False otherwise.
+        """        
         try:
             result = self.client.execute_query(test.query)
         except Exception as e:
@@ -24,6 +37,17 @@ class DataQualityOperator:
                 return False
 
     def run_multi_tests(self, tests: list[Test]):
+        """Iterate through a list of Test objects, run and report results.
+
+        Parameters
+        ----------
+        tests : list[Test]
+
+        Raises
+        ------
+        ValueError
+            Raise this exception to alert that the data test has failed.
+        """
 
         all_tests = []
         failed_tests = []

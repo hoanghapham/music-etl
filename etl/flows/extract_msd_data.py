@@ -8,7 +8,16 @@ from src.aws.s3 import S3Client
 from src.utils.custom_logger import init_logger
 
 
-def main(search_dirs):
+def main(search_dirs="A"):
+    """Go through the song directories, extract H5 files for data and upload to S3.
+    
+
+    Parameters
+    ----------
+    search_dirs : str, optional
+        The search_dirs argument is actually a string of capitalized characters, 
+        for example "ABC". Default to "A"
+    """    
 
     # Set up
     p = Path(__file__).with_name('config.cfg')
@@ -36,9 +45,14 @@ def main(search_dirs):
 
     patterns = []
 
+    # Generate search pattern by appending two characters
     for char1 in search_dirs:
         for char2 in string.ascii_uppercase:
             patterns.append(f"{char1}/{char2}")
+
+    
+    # Walk through the search patterns, search for H5 files, 
+    # and combine their data into a single JSON file.
 
     for pattern in patterns:
         search_path         = f"{input_dir}/{pattern}/**/*.h5"
