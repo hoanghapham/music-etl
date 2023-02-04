@@ -92,7 +92,7 @@ After the command finished running, it will output the resource identifiers that
 In case you run the `prod/` folder, you will also 
 
 ### Obtain Spotify API Credentials
-Simply go to https://developer.spotify.com/dashboard/applications, create an app, and obtain the client ID and client Secret.
+Simply go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications), create an app, and obtain the client ID and client Secret.
 
 
 ## How to get data
