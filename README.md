@@ -62,12 +62,12 @@ In this case, we will need to pay extra attention to the query pattern of the us
 
 Assume that you have set up all resources via Terraform and filled in `config.cfg` file:
 
-    ```bash
-    make setup-env
-    make download-msd-subset
-    make extract-msd-data
-    make run-etl-dev
-    ```
+```bash
+make setup-env
+make download-msd-subset
+make extract-msd-data
+make run-etl-dev
+```
 
 ## Production (on EC2)
 
